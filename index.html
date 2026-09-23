@@ -1,1007 +1,833 @@
 <!doctype html>
-<html lang="en">
- <head>
+<html lang="id">
+<head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Dam-Daman - Game Start Screen</title>
   <script src="/_sdk/element_sdk.js"></script>
-  <style>
-        body {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            height: 100%;
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
-            overflow: hidden;
-            position: relative;
-        }
-
-        
-        html {
-            height: 100%;
-        }
-
-        /* Animated background pattern */
-        .background-pattern {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            opacity: 0.1;
-            z-index: 1;
-        }
-
-        .dam-big {
-        position: absolute;
-        width: 200px;              /* Ukuran besar */
-        height: auto;
-        left: 25%;                 /* Posisi samping kiri tombol */
-        top: 60%;
-        transform: translateY(-50%);
-        z-index: 20;
-        opacity: 0.95;
-        filter: drop-shadow(0px 10px 20px rgba(0,0,0,0.4));
-        animation: damFloat 4s ease-in-out infinite;
-        }
-
-        @keyframes damFloat {
-        0%, 100% { transform: translateY(-50%) translateX(0); }
-        50% { transform: translateY(-60%) translateX(5px); }
-        }
-
-        .papan-big {
-        position: absolute;
-        width: 250px;              /* Ukuran besar */
-        height: auto;
-        right: 25%;                 /* Posisi samping kanan tombol */
-        top: 60%;
-        transform: translateY(-50%);
-        z-index: 20;
-        opacity: 0.95;
-        filter: drop-shadow(0px 10px 20px rgba(0,0,0,0.4));
-        animation: damFloat 4s ease-in-out infinite;
-        }
-
-        @keyframes damFloat {
-        0%, 100% { transform: translateY(-50%) translateX(0); }
-        50% { transform: translateY(-60%) translateX(5px); }
-        }
-
-        .music-btn {
-        position: fixed;
-        top: 20px;
-        right: 20px;
-        z-index: 999;
-        background: rgba(255,255,255,0.15);
-        border: 2px solid rgba(255,255,255,0.3);
-        backdrop-filter: blur(10px);
-        color: #fff;
-        font-size: 22px;
-        padding: 12px 16px;
-        border-radius: 14px;
-        cursor: pointer;
-        transition: 0.3s;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-        }
-
-        .music-btn:hover {
-        transform: scale(1.08);
-        background: rgba(255,255,255,0.25);
-        }
-
-        .checkerboard {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            background-image: 
-                linear-gradient(45deg, rgba(255, 87, 51, 0.1) 25%, transparent 25%),
-                linear-gradient(-45deg, rgba(255, 87, 51, 0.1) 25%, transparent 25%),
-                linear-gradient(45deg, transparent 75%, rgba(59, 130, 246, 0.1) 75%),
-                linear-gradient(-45deg, transparent 75%, rgba(59, 130, 246, 0.1) 75%);
-            background-size: 60px 60px;
-            background-position: 0 0, 0 30px, 30px -30px, -30px 0px;
-            animation: drift 20s linear infinite;
-        }
-
-        @keyframes drift {
-            0% { transform: translateX(0) translateY(0); }
-            100% { transform: translateX(60px) translateY(60px); }
-        }
-
-        /* Floating game pieces */
-        .floating-pieces {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            z-index: 2;
-        }
-
-        .game-piece {
-            position: absolute;
-            width: 24px;
-            height: 24px;
-            border-radius: 50%;
-            animation: float 6s ease-in-out infinite;
-        }
-
-        .piece-red {
-            background: linear-gradient(135deg, #ff5733, #e74c3c);
-            box-shadow: 0 4px 12px rgba(255, 87, 51, 0.3);
-        }
-
-        .piece-blue {
-            background: linear-gradient(135deg, #3b82f6, #2563eb);
-            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
-        }
-
-        @keyframes float {
-            0%, 100% { transform: translateY(0px) rotate(0deg); }
-            50% { transform: translateY(-20px) rotate(180deg); }
-        }
-
-        /* Main container */
-        .game-container {
-            position: relative;
-            z-index: 10;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            min-height: 100%;
-            padding: 2rem;
-        }
-
-        /* Title section */
-        .title-section {
-            text-align: center;
-            margin-bottom: 3rem;
-            animation: slideDown 0.8s ease-out;
-        }
-
-        .game-title {
-            font-size: 4rem;
-            font-weight: 900;
-            background: linear-gradient(135deg, #ff5733, #ffa726, #ff5733);
-            background-size: 200% 200%;
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            text-shadow: 0 4px 20px rgba(255, 87, 51, 0.3);
-            margin: 0;
-            letter-spacing: -2px;
-            animation: titleGlow 3s ease-in-out infinite alternate;
-        }
-
-        .game-subtitle {
-            font-size: 1.2rem;
-            color: #94a3b8;
-            margin: 0.5rem 0 0 0;
-            font-weight: 400;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-        }
-
-        @keyframes titleGlow {
-            0% { background-position: 0% 50%; }
-            100% { background-position: 100% 50%; }
-        }
-
-        @keyframes slideDown {
-            0% { transform: translateY(-50px); opacity: 0; }
-            100% { transform: translateY(0); opacity: 1; }
-        }
-
-        /* Menu card */
-        .menu-card {
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 24px;
-            padding: 2.5rem;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
-            animation: slideUp 0.8s ease-out 0.2s both;
-            min-width: 320px;
-        }
-
-        @keyframes slideUp {
-            0% { transform: translateY(50px); opacity: 0; }
-            100% { transform: translateY(0); opacity: 1; }
-        }
-
-
-        /* ============================
-        POPUP OVERLAY (NEW)
-        ============================ */
-        .popup-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            display: none;
-            justify-content: center;
-            align-items: center;
-            backdrop-filter: blur(4px);
-            background: rgba(0, 0, 0, 0.55);
-            z-index: 9999;
-            animation: fadeIn 0.3s ease;
-        }
-
-        /* Popup box */
-        .popup-box {
-            width: 420px;
-            max-width: 90%;
-            background: linear-gradient(135deg, #1e293b, #0f172a);
-            border-radius: 20px;
-            padding: 30px;
-            color: white;
-            text-align: center;
-            position: relative;
-            box-shadow: 0 0 35px rgba(0, 150, 255, 0.3);
-            animation: popupAppear 0.35s ease;
-            border: 2px solid rgba(255, 255, 255, 0.15);
-        }
-
-        /* Judul */
-        .popup-box h2 {
-            font-size: 1.8rem;
-            margin-bottom: 10px;
-            font-weight: 800;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-
-            /* FIX START */
-            background: linear-gradient(135deg, #3b82f6, #60a5fa);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            color: transparent; 
-            display: inline-block; 
-            /* FIX END */
-        }
-
-
-        /* Isi teks */
-        .popup-box p {
-            font-size: 1rem;
-            line-height: 1.6;
-            opacity: 0.9;
-        }
-
-        /* Tombol close */
-        .popup-button {
-            margin-top: 20px;
-            padding: 12px 22px;
-            background: linear-gradient(135deg, #ef4444, #dc2626);
-            border: none;
-            color: white;
-            border-radius: 10px;
-            cursor: pointer;
-            font-weight: bold;
-            letter-spacing: 1px;
-            transition: 0.3s;
-            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
-        }
-
-        .popup-button:hover {
-            transform: translateY(-2px) scale(1.05);
-            box-shadow: 0 6px 18px rgba(239, 68, 68, 0.45);
-        }
-
-        /* Close icon (X) */
-        .popup-close-x {
-            position: absolute;
-            top: 12px;
-            right: 15px;
-            font-size: 22px;
-            cursor: pointer;
-            opacity: 0.7;
-            transition: 0.2s;
-        }
-
-        .popup-close-x:hover {
-            opacity: 1;
-            transform: scale(1.15);
-        }
-
-        /* ANIMATIONS */
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-
-        @keyframes popupAppear {
-            from { opacity: 0; transform: scale(0.8); }
-            to { opacity: 1; transform: scale(1); }
-        }
-
-        /* Setting */
-        .setting-box {
-            width: 420px;
-            max-width: 90%;
-            background: linear-gradient(135deg, #1e293b, #0f172a);
-            border-radius: 20px;
-            padding: 30px;
-            color: white;
-            text-align: center;
-            position: relative;
-            box-shadow: 0 0 35px rgba(0, 150, 255, 0.3);
-            animation: popupAppear 0.35s ease;
-            border: 2px solid rgba(255, 255, 255, 0.15);
-        }
-
-
-        .label-setting {
-            display: block;
-            text-align: left;
-            margin: 10px 0 5px;
-            font-size: 15px;
-            font-weight: 600;
-            color: white;
-        }
-
-        .select-setting {
-            width: 100%;
-            padding: 10px;
-            border-radius: 10px;
-            border: 1px solid rgba(255,255,255,0.3);
-            outline: none;
-            margin-bottom: 15px;
-
-            background: rgba(0,0,0,0.4);   /* lebih gelap biar terlihat */
-            color: #fff;
-            font-size: 15px;
-
-            /* Hilangkan style default */
-            appearance: none;
-            -webkit-appearance: none;
-            -moz-appearance: none;
-
-            background-image: url("data:image/svg+xml;utf8,<svg fill='white' height='20' width='20' viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg'><polygon points='0,0 20,0 10,15'/></svg>");
-            background-repeat: no-repeat;
-            background-position: right 10px center;
-            background-size: 14px;
-
-            cursor: pointer;
-        }
-
-
-
-        .slider-setting {
-            width: 100%;
-            height: 6px;
-            border-radius: 5px;
-            outline: none;
-            background: #ddd;
-        }
-
-        .slider-setting::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            width: 18px;
-            height: 18px;
-            background: #ff5733;
-            border-radius: 50%;
-            cursor: pointer;
-            box-shadow: 0 0 10px #ff5733;
-        }
-
-        .select-setting {
-            width: 100%;
-            padding: 10px;
-            border-radius: 10px;
-            border: none;
-            outline: none;
-            margin-bottom: 15px;
-            background: rgba(255,255,255,0.2);
-            color: white;
-            font-size: 15px;
-        }
-
-        /* Buttons */
-        .menu-buttons {
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-        }
-        .game-button.danger {
-        background-color: #c0392b;
-        color: white;
-        }
-
-        .game-button.danger:hover {
-        background-color: #e74c3c;
-        }
-
-        .game-button {
-            background: linear-gradient(135deg, #3b82f6, #2563eb);
-            color: white;
-            border: none;
-            padding: 1rem 2rem;
-            border-radius: 16px;
-            font-size: 1.1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            box-shadow: 0 8px 24px rgba(59, 130, 246, 0.3);
-        }
-
-        .game-button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 12px 32px rgba(59, 130, 246, 0.4);
-        }
-
-        .game-button:active {
-            transform: translateY(0);
-        }
-
-        .game-button.primary {
-            background: linear-gradient(135deg, #ff5733, #e74c3c);
-            box-shadow: 0 8px 24px rgba(255, 87, 51, 0.3);
-            font-size: 1.3rem;
-            padding: 1.2rem 2.5rem;
-        }
-
-        .game-button.primary:hover {
-            box-shadow: 0 12px 32px rgba(255, 87, 51, 0.4);
-        }
-
-        .game-button::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-            transition: left 0.5s;
-        }
-
-        .game-button:hover::before {
-            left: 100%;
-        }
-
-        /* Gaya untuk Tombol Sekunder (Multiplayer) */
-        .game-button.secondary {
-            background: linear-gradient(135deg, #3b82f6, #2563eb);
-            box-shadow: 0 8px 24px rgba(59, 130, 246, 0.3);
-            font-size: 1.3rem;
-            padding: 1.2rem 2.5rem;
-        }
-        .game-button.secondary:hover {
-            box-shadow: 0 12px 32px rgba(59, 130, 246, 0.4);
-        }
-        
-        
-        
-        /* Responsive design */
-        @media (max-width: 768px) {
-            .game-title {
-                font-size: 2.5rem;
-            }
-            
-            .menu-card {
-                padding: 2rem;
-                min-width: 280px;
-            }
-            
-            .game-container {
-                padding: 1rem;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .game-title {
-                font-size: 2rem;
-            }
-            
-            .game-button {
-                font-size: 1rem;
-                padding: 0.9rem 1.8rem;
-            }
-            
-            .game-button.primary {
-                font-size: 1.1rem;
-                padding: 1rem 2rem;
-            }
-        }
-
-        
-    </style>
-  
-  <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
   <script src="https://cdn.tailwindcss.com" type="text/javascript"></script>
- </head>
- <body><!-- Background patterns -->
-    <button id="music-toggle" class="music-btn">🔊</button>
+  <style>
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+      overflow-x: hidden;
+      overflow-y: auto;
+      position: relative;
+    }
+
+    /* Background Animation */
+    .background-pattern {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      opacity: 0.12;
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    .checkerboard {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      background-image: 
+        linear-gradient(45deg, rgba(255, 87, 51, 0.15) 25%, transparent 25%),
+        linear-gradient(-45deg, rgba(255, 87, 51, 0.15) 25%, transparent 25%),
+        linear-gradient(45deg, transparent 75%, rgba(59, 130, 246, 0.15) 75%),
+        linear-gradient(-45deg, transparent 75%, rgba(59, 130, 246, 0.15) 75%);
+      background-size: 60px 60px;
+      background-position: 0 0, 0 30px, 30px -30px, -30px 0px;
+      animation: drift 25s linear infinite;
+    }
+
+    @keyframes drift {
+      0% { transform: translate(0, 0); }
+      100% { transform: translate(60px, 60px); }
+    }
+
+    /* Floating game pieces in background */
+    .floating-pieces {
+      position: fixed;
+      width: 100%;
+      height: 100%;
+      z-index: 2;
+      pointer-events: none;
+    }
+
+    .game-piece {
+      position: absolute;
+      width: clamp(16px, 3vw, 28px);
+      height: clamp(16px, 3vw, 28px);
+      border-radius: 50%;
+      animation: float 6s ease-in-out infinite;
+    }
+
+    .piece-red {
+      background: linear-gradient(135deg, #ff5733, #e74c3c);
+      box-shadow: 0 4px 12px rgba(255, 87, 51, 0.4);
+    }
+
+    .piece-blue {
+      background: linear-gradient(135deg, #3b82f6, #2563eb);
+      box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0px) rotate(0deg); }
+      50% { transform: translateY(-18px) rotate(180deg); }
+    }
+
+    /* Music Toggle Button */
+    .music-btn {
+      position: fixed;
+      top: 16px;
+      right: 16px;
+      z-index: 100;
+      background: rgba(255, 255, 255, 0.15);
+      border: 2px solid rgba(255, 255, 255, 0.25);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      color: #fff;
+      font-size: clamp(18px, 4vw, 22px);
+      padding: clamp(8px, 2vw, 12px) clamp(12px, 2.5vw, 16px);
+      border-radius: 14px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .music-btn:hover {
+      transform: scale(1.08);
+      background: rgba(255, 255, 255, 0.25);
+    }
+
+    /* Large Decorative Assets */
+    .dam-big, .papan-big {
+      position: absolute;
+      z-index: 5;
+      opacity: 0.9;
+      filter: drop-shadow(0px 10px 20px rgba(0,0,0,0.5));
+      pointer-events: none;
+      transition: all 0.5s ease;
+    }
+
+    .dam-big {
+      width: clamp(100px, 18vw, 220px);
+      left: clamp(2%, 8vw, 15%);
+      top: 55%;
+      transform: translateY(-50%);
+      animation: damFloat 4s ease-in-out infinite;
+    }
+
+    .papan-big {
+      width: clamp(120px, 20vw, 260px);
+      right: clamp(2%, 8vw, 15%);
+      top: 55%;
+      transform: translateY(-50%);
+      animation: damFloat 4s ease-in-out infinite 0.5s;
+    }
+
+    @keyframes damFloat {
+      0%, 100% { transform: translateY(-50%) translateX(0); }
+      50% { transform: translateY(-56%) translateX(6px); }
+    }
+
+    /* Main Layout Container */
+    .game-container {
+      position: relative;
+      z-index: 10;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 1.5rem 1rem;
+      width: 100%;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    /* Title section */
+    .title-section {
+      text-align: center;
+      margin-bottom: clamp(1.5rem, 4vh, 2.5rem);
+      animation: slideDown 0.8s ease-out;
+      width: 100%;
+    }
+
+    .game-title {
+      font-size: clamp(2.2rem, 8vw, 4.2rem);
+      font-weight: 900;
+      background: linear-gradient(135deg, #ff5733, #ffa726, #ff5733);
+      background-size: 200% 200%;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      filter: drop-shadow(0 4px 15px rgba(255, 87, 51, 0.3));
+      margin: 0;
+      line-height: 1.1;
+      letter-spacing: -1px;
+      animation: titleGlow 3s ease-in-out infinite alternate;
+    }
+
+    .game-subtitle {
+      font-size: clamp(0.85rem, 2.5vw, 1.2rem);
+      color: #94a3b8;
+      margin: 0.6rem 0 0 0;
+      font-weight: 500;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+
+    @keyframes titleGlow {
+      0% { background-position: 0% 50%; }
+      100% { background-position: 100% 50%; }
+    }
+
+    @keyframes slideDown {
+      0% { transform: translateY(-40px); opacity: 0; }
+      100% { transform: translateY(0); opacity: 1; }
+    }
+
+    /* Menu Card */
+    .menu-card {
+      background: rgba(255, 255, 255, 0.06);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 24px;
+      padding: clamp(1.5rem, 4vw, 2.5rem);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+      animation: slideUp 0.8s ease-out 0.2s both;
+      width: 100%;
+      max-width: 400px;
+    }
+
+    @keyframes slideUp {
+      0% { transform: translateY(40px); opacity: 0; }
+      100% { transform: translateY(0); opacity: 1; }
+    }
+
+    .menu-buttons {
+      display: flex;
+      flex-direction: column;
+      gap: clamp(0.75rem, 2vh, 1.25rem);
+      width: 100%;
+    }
+
+    /* Buttons */
+    .game-button {
+      background: linear-gradient(135deg, #3b82f6, #2563eb);
+      color: white;
+      border: none;
+      padding: clamp(0.85rem, 2.5vh, 1.1rem) clamp(1.2rem, 3vw, 2rem);
+      border-radius: 16px;
+      font-size: clamp(0.95rem, 2.5vw, 1.1rem);
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      position: relative;
+      overflow: hidden;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      box-shadow: 0 8px 20px rgba(59, 130, 246, 0.3);
+      width: 100%;
+      text-align: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .game-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 28px rgba(59, 130, 246, 0.45);
+    }
+
+    .game-button:active {
+      transform: translateY(1px) scale(0.98);
+    }
+
+    .game-button.primary {
+      background: linear-gradient(135deg, #ff5733, #e74c3c);
+      box-shadow: 0 8px 24px rgba(255, 87, 51, 0.35);
+      font-size: clamp(1.05rem, 2.8vw, 1.25rem);
+      padding: clamp(1rem, 2.8vh, 1.25rem) clamp(1.5rem, 4vw, 2.5rem);
+    }
+
+    .game-button.primary:hover {
+      box-shadow: 0 12px 32px rgba(255, 87, 51, 0.5);
+    }
+
+    .game-button.secondary {
+      background: linear-gradient(135deg, #3b82f6, #2563eb);
+      box-shadow: 0 8px 24px rgba(59, 130, 246, 0.35);
+      font-size: clamp(1.05rem, 2.8vw, 1.25rem);
+      padding: clamp(1rem, 2.8vh, 1.25rem) clamp(1.5rem, 4vw, 2.5rem);
+    }
+
+    .game-button::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.25), transparent);
+      transition: left 0.5s;
+    }
+
+    .game-button:hover::before {
+      left: 100%;
+    }
+
+    /* Popups */
+    .popup-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: none;
+      justify-content: center;
+      align-items: center;
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      background: rgba(0, 0, 0, 0.65);
+      z-index: 9999;
+      padding: 1rem;
+      animation: fadeIn 0.3s ease;
+    }
+
+    .popup-box {
+      width: 100%;
+      max-width: 440px;
+      max-height: 85vh;
+      overflow-y: auto;
+      background: linear-gradient(135deg, #1e293b, #0f172a);
+      border-radius: 20px;
+      padding: clamp(1.25rem, 4vw, 2.25rem);
+      color: white;
+      text-align: center;
+      position: relative;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6), 0 0 30px rgba(59, 130, 246, 0.2);
+      animation: popupAppear 0.3s ease;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+    }
+
+    .popup-box h2 {
+      font-size: clamp(1.3rem, 4vw, 1.75rem);
+      margin-top: 0;
+      margin-bottom: 12px;
+      font-weight: 800;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      background: linear-gradient(135deg, #60a5fa, #3b82f6);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      display: inline-block;
+    }
+
+    .popup-box p {
+      font-size: clamp(0.88rem, 2.2vw, 1rem);
+      line-height: 1.6;
+      opacity: 0.9;
+      text-align: left;
+      margin-bottom: 1rem;
+    }
+
+    .popup-button {
+      margin-top: 15px;
+      padding: 12px 24px;
+      background: linear-gradient(135deg, #ef4444, #dc2626);
+      border: none;
+      color: white;
+      border-radius: 12px;
+      cursor: pointer;
+      font-weight: 700;
+      font-size: 0.95rem;
+      letter-spacing: 1px;
+      transition: all 0.25s ease;
+      box-shadow: 0 4px 14px rgba(239, 68, 68, 0.35);
+      width: 100%;
+    }
+
+    .popup-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 18px rgba(239, 68, 68, 0.5);
+    }
+
+    .popup-close-x {
+      position: absolute;
+      top: 14px;
+      right: 16px;
+      font-size: 24px;
+      cursor: pointer;
+      opacity: 0.7;
+      transition: 0.2s;
+      line-height: 1;
+      padding: 4px 8px;
+    }
+
+    .popup-close-x:hover {
+      opacity: 1;
+      transform: scale(1.15);
+    }
+
+    /* Settings Elements */
+    .label-setting {
+      display: block;
+      text-align: left;
+      margin: 12px 0 6px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: #cbd5e1;
+    }
+
+    .select-setting {
+      width: 100%;
+      padding: 10px 14px;
+      border-radius: 10px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      outline: none;
+      margin-bottom: 12px;
+      background: rgba(15, 23, 42, 0.7);
+      color: #fff;
+      font-size: 0.95rem;
+      appearance: none;
+      -webkit-appearance: none;
+      background-image: url("data:image/svg+xml;utf8,<svg fill='white' height='20' width='20' viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg'><polygon points='0,0 20,0 10,15'/></svg>");
+      background-repeat: no-repeat;
+      background-position: right 12px center;
+      background-size: 12px;
+      cursor: pointer;
+    }
+
+    .slider-setting {
+      width: 100%;
+      height: 8px;
+      border-radius: 5px;
+      outline: none;
+      background: rgba(255, 255, 255, 0.2);
+      margin-bottom: 10px;
+    }
+
+    .slider-setting::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 20px;
+      height: 20px;
+      background: #ff5733;
+      border-radius: 50%;
+      cursor: pointer;
+      box-shadow: 0 0 10px #ff5733;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    @keyframes popupAppear {
+      from { opacity: 0; transform: scale(0.88); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    /* RESPONSIVE MEDIA QUERIES */
+
+    /* Desktop (Layar Lebar) */
+    @media (min-width: 1025px) {
+      .dam-big {
+        left: clamp(5%, 10vw, 18%);
+      }
+      .papan-big {
+        right: clamp(5%, 10vw, 18%);
+      }
+    }
+
+    /* Tablet / Small Laptop */
+    @media (max-width: 1024px) {
+      .dam-big {
+        width: 140px;
+        left: 3%;
+        top: 75%;
+        opacity: 0.5;
+      }
+      .papan-big {
+        width: 160px;
+        right: 3%;
+        top: 75%;
+        opacity: 0.5;
+      }
+    }
+
+    /* Mobile Devices */
+    @media (max-width: 768px) {
+      .dam-big, .papan-big {
+        display: none; /* Sembunyikan elemen dekoratif agar layar hp bersih */
+      }
+
+      .menu-card {
+        padding: 1.5rem;
+        border-radius: 20px;
+      }
+
+      .game-container {
+        justify-content: center;
+        padding-top: 2rem;
+      }
+    }
+
+    /* Extra Small Screen (HP Kecil < 360px) */
+    @media (max-width: 360px) {
+      .game-title {
+        font-size: 2rem;
+      }
+
+      .menu-card {
+        padding: 1.2rem;
+      }
+
+      .game-button {
+        font-size: 0.88rem;
+        padding: 0.8rem 1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Music Toggle -->
+  <button id="music-toggle" class="music-btn" aria-label="Toggle Music">🔊</button>
+
+  <!-- Background Patterns -->
   <div class="background-pattern">
-   <div class="checkerboard"></div>
-  </div><!-- Floating game pieces -->
+    <div class="checkerboard"></div>
+  </div>
+
+  <!-- Floating Game Pieces -->
   <div class="floating-pieces">
-   <div class="game-piece piece-red" style="top: 15%; left: 10%; animation-delay: 0s;"></div>
-   <div class="game-piece piece-blue" style="top: 25%; right: 15%; animation-delay: 1s;"></div>
-   <div class="game-piece piece-red" style="top: 60%; left: 8%; animation-delay: 2s;"></div>
-   <div class="game-piece piece-blue" style="top: 70%; right: 12%; animation-delay: 3s;"></div>
-   <div class="game-piece piece-red" style="top: 40%; right: 25%; animation-delay: 4s;"></div>
-   <div class="game-piece piece-blue" style="top: 80%; left: 20%; animation-delay: 5s;"></div>
-  </div><!-- Main game container -->
+    <div class="game-piece piece-red" style="top: 15%; left: 8%; animation-delay: 0s;"></div>
+    <div class="game-piece piece-blue" style="top: 25%; right: 12%; animation-delay: 1s;"></div>
+    <div class="game-piece piece-red" style="top: 65%; left: 6%; animation-delay: 2s;"></div>
+    <div class="game-piece piece-blue" style="top: 75%; right: 8%; animation-delay: 3s;"></div>
+    <div class="game-piece piece-red" style="top: 45%; right: 20%; animation-delay: 4s;"></div>
+    <div class="game-piece piece-blue" style="top: 85%; left: 18%; animation-delay: 5s;"></div>
+  </div>
+
+  <!-- Decorative Images (PC/Tablet) -->
+  <img src="Aset/pion.png" alt="Pion Dam" class="dam-big" onerror="this.style.display='none'">
+  <img src="Aset/Papan.png" alt="Papan Dam" class="papan-big" onerror="this.style.display='none'">
+
+  <!-- Main Container -->
   <main class="game-container">
-       <div class="title-section">
-    <h1 id="game-title" class="game-title">Dam-Daman</h1>
-    <p id="game-subtitle" class="game-subtitle">5x5 Strategy Game</p>
-   </div>
-   <audio id="bg-music" src="Aset/sound.mp3" loop></audio>
-   <audio id="hover-sound" src="Aset/hover.wav"></audio>
-   <audio id="click-sound" src="Aset/click.wav"></audio>
-   <img src="Aset/pion.png" class="dam-big">
-   <img src="Aset/Papan.png" class="papan-big">
-   <div class="menu-card">
-    <div class="menu-buttons">
+    <div class="title-section">
+      <h1 id="game-title" class="game-title">Dam-Daman</h1>
+      <p id="game-subtitle" class="game-subtitle">5x5 Strategy Game</p>
+    </div>
+
+    <!-- Audio Elements -->
+    <audio id="bg-music" src="Aset/sound.mp3" loop></audio>
+    <audio id="hover-sound" src="Aset/hover.wav"></audio>
+    <audio id="click-sound" src="Aset/click.wav"></audio>
+
+    <!-- Main Menu Card -->
+    <div class="menu-card">
+      <div class="menu-buttons">
         <button id="play-button" class="game-button primary">Start Game</button> 
         <button id="tutorial-button" class="game-button">How to Play</button> 
         <button id="settings-button" class="game-button">Settings</button>
         <button id="about-button" class="game-button">About</button>
-    </div>
-   </div>
-
-   <div id="mode-selection-popup" class="popup-overlay">
-    <div class="popup-box">
-        <span id="close-mode-selection-x" class="popup-close-x">×</span>
-        <h2>Pilih Mode</h2>
-        <button id="single-player-btn" class="game-button primary" style="margin-bottom: 15px; width: 80%;">Single Player</button>
-        <button id="multiplayer-btn" class="game-button secondary" style="width: 80%;">Multiplayer</button>
-    </div>
+      </div>
     </div>
 
+    <!-- MODE SELECTION POPUP -->
+    <div id="mode-selection-popup" class="popup-overlay">
+      <div class="popup-box">
+        <span id="close-mode-selection-x" class="popup-close-x">&times;</span>
+        <h2 id="mode-title">Pilih Mode</h2>
+        <div style="display: flex; flex-direction: column; gap: 12px; margin-top: 15px;">
+          <button id="single-player-btn" class="game-button primary">Single Player</button>
+          <button id="multiplayer-btn" class="game-button secondary">Multiplayer</button>
+        </div>
+      </div>
+    </div>
   </main>
+
+  <!-- HOW TO PLAY POPUP -->
   <div id="howto-popup" class="popup-overlay">
     <div class="popup-box">
-
-        <div id="close-howto-x" class="popup-close-x">✕</div>
-
-        <h2>How to Play</h2>
-
-        <p>
-            • Untuk Mode Chalage Harus menjawab pertanyaan Matematika Terlebih Dahulu<br>
-            • Gerakkan pion ke depan, belakang, kiri, kanan, atau diagonal.<br>
-            • Lompat pion lawan untuk memakannya.<br>
-            • Pion lawan yang dilompati akan hilang.<br>
-            • Pemain menang jika lawan tidak bisa bergerak atau pionnya habis.<br>
-        </p>
-
-        <button id="close-howto" class="popup-button">Close</button>
+      <div id="close-howto-x" class="popup-close-x">✕</div>
+      <h2>How to Play</h2>
+      <p id="howto-text">
+        • Untuk Mode Challenge harus menjawab pertanyaan matematika terlebih dahulu.<br>
+        • Gerakkan pion ke depan, belakang, kiri, kanan, atau diagonal.<br>
+        • Lompat pion lawan untuk memakannya.<br>
+        • Pion lawan yang dilompati akan hilang dari papan.<br>
+        • Pemain menang jika lawan tidak bisa bergerak atau pionnya habis.
+      </p>
+      <button id="close-howto" class="popup-button">Close</button>
     </div>
+  </div>
+
+  <!-- SETTINGS POPUP -->
+  <div id="settings-popup" class="popup-overlay">
+    <div class="popup-box">
+      <div id="close-settings-x" class="popup-close-x">✕</div>
+      <h2 id="settings-title">Settings</h2>
+
+      <label id="label-music" class="label-setting" for="music-slider">Music Volume</label>
+      <input id="music-slider" type="range" min="0" max="100" value="70" class="slider-setting">
+
+      <label id="label-sfx" class="label-setting" for="sfx-slider">Sound Effect Volume</label>
+      <input id="sfx-slider" type="range" min="0" max="100" value="70" class="slider-setting">
+
+      <label id="label-lang" class="label-setting" for="language-select">Language</label>
+      <select id="language-select" class="select-setting">
+        <option value="id">Indonesia</option>
+        <option value="en">English</option>
+      </select>
+
+      <button id="close-settings" class="popup-button">Close</button>
     </div>
-    <!-- SETTING POPUP -->
-    <div id="settings-popup" class="popup-overlay">
-    <div class="popup-box setting-box">
-        <h2>Settings</h2>
+  </div>
 
-        <label class="label-setting">Music Volume</label>
-        <input id="music-slider" type="range" min="0" max="100" value="70" class="slider-setting">
-
-        <label class="label-setting">Sound Effect Volume</label>
-        <input id="sfx-slider" type="range" min="0" max="100" value="70" class="slider-setting">
-
-
-        <label class="label-setting">Language</label>
-        <select id="language-select" class="select-setting">
-            <option value="id">Indonesia</option>
-            <option value="en">English</option>
-        </select>
-
-        <button id="close-settings" class="popup-button">Close</button>
+  <!-- ABOUT POPUP -->
+  <div id="about-popup" class="popup-overlay">
+    <div class="popup-box">
+      <span id="close-about-x" class="popup-close-x">&times;</span>
+      <h2 id="about-title">Tentang Aplikasi</h2>
+      <p id="about-text" style="text-align: center;">
+        Dam-Daman adalah permainan strategi tradisional berbasis digital yang dikembangkan untuk melatih fokus, logika, dan kecerdasan berpikir.<br><br>
+        <b>Dikembangkan oleh:</b><br>
+        <span style="font-size:1.1rem; font-weight:700; color:#4ecdc4;">Arif Prayogo</span><br><br>
+        Terima kasih telah memainkan game ini!
+      </p>
+      <button id="close-about" class="popup-button">Tutup</button>
     </div>
-    </div>
-    <!-- ABOUT POPUP -->
-    <div id="about-popup" class="popup-overlay">
-        <div class="popup-box">
-            <span id="close-about-x" class="popup-close-x">×</span>
-            <h2>Tentang Aplikasi</h2>
-            <p>
-                Dam-Daman adalah permainan strategi tradisional berbasis digital<br>
-                yang dikembangkan untuk melatih fokus, logika, dan kecerdasan berpikir.<br><br>
-                <b>Dikembangkan oleh:</b> <br>
-                <span style="font-size:1.1rem; font-weight:700; color:#4ecdc4;">
-                Arif Prayogo
-                </span><br><br>
-                Terima kasih telah memainkan game ini!
-            </p>
-            <button id="close-about" class="popup-button">Tutup</button>
-        </div>
-    </div>
-  
-    
+  </div>
+
   <script>
-        
-        const musicBtn = document.getElementById("music-toggle");
-        let musicOn = true;
-        // Main logic mute / unmute
-        musicBtn.addEventListener("click", () => {
-        if (musicOn) {
-            bgMusic.pause();
-            musicBtn.textContent = "🔇";
-        } else {
-            bgMusic.play();
-            musicBtn.textContent = "🔊";
+    // Audio Control
+    const bgMusic = document.getElementById("bg-music");
+    const hoverSound = document.getElementById("hover-sound");
+    const clickSound = document.getElementById("click-sound");
+    const musicBtn = document.getElementById("music-toggle");
+    let musicOn = true;
+
+    musicBtn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      if (musicOn) {
+        bgMusic.pause();
+        musicBtn.textContent = "🔇";
+      } else {
+        bgMusic.play().catch(() => {});
+        musicBtn.textContent = "🔊";
+      }
+      musicOn = !musicOn;
+    });
+
+    // Autoplay trigger on first user interaction
+    document.body.addEventListener("click", () => {
+      if (musicOn && bgMusic.paused) {
+        bgMusic.play().catch(() => {});
+      }
+    }, { once: true });
+
+    // Mode Selection Popup
+    const modePopup = document.getElementById("mode-selection-popup");
+    const playBtn = document.getElementById("play-button");
+    const closeModeX = document.getElementById("close-mode-selection-x");
+
+    playBtn.addEventListener('click', function() {
+      modePopup.style.display = "flex";
+    });
+
+    closeModeX.addEventListener("click", () => modePopup.style.display = "none");
+    modePopup.addEventListener("click", (e) => {
+      if (e.target === modePopup) modePopup.style.display = "none";
+    });
+
+    document.getElementById('single-player-btn').addEventListener('click', function() {
+      window.location.href = "karakter.html?mode=single";
+    });
+
+    document.getElementById('multiplayer-btn').addEventListener('click', function() {
+      window.location.href = "karakter.html?mode=multi";
+    });
+
+    // How to Play Popup
+    const howtoBtn = document.getElementById("tutorial-button");
+    const popupHowto = document.getElementById("howto-popup");
+    const closeHowto = document.getElementById("close-howto");
+    const closeHowtoX = document.getElementById("close-howto-x");
+
+    howtoBtn.addEventListener("click", () => popupHowto.style.display = "flex");
+    closeHowto.addEventListener("click", () => popupHowto.style.display = "none");
+    closeHowtoX.addEventListener("click", () => popupHowto.style.display = "none");
+    popupHowto.addEventListener("click", (e) => {
+      if (e.target === popupHowto) popupHowto.style.display = "none";
+    });
+
+    // Settings Popup
+    const settingsBtn = document.getElementById("settings-button");
+    const settingsPopup = document.getElementById("settings-popup");
+    const closeSettings = document.getElementById("close-settings");
+    const closeSettingsX = document.getElementById("close-settings-x");
+    const musicSlider = document.getElementById("music-slider");
+    const sfxSlider = document.getElementById("sfx-slider");
+    const languageSelect = document.getElementById("language-select");
+
+    settingsBtn.addEventListener("click", () => settingsPopup.style.display = "flex");
+    closeSettings.addEventListener("click", () => settingsPopup.style.display = "none");
+    closeSettingsX.addEventListener("click", () => settingsPopup.style.display = "none");
+    settingsPopup.addEventListener("click", (e) => {
+      if (e.target === settingsPopup) settingsPopup.style.display = "none";
+    });
+
+    // Volume Sliders
+    musicSlider.addEventListener("input", () => {
+      bgMusic.volume = musicSlider.value / 100;
+    });
+
+    sfxSlider.addEventListener("input", () => {
+      const vol = sfxSlider.value / 100;
+      hoverSound.volume = vol;
+      clickSound.volume = vol;
+    });
+
+    // Language Switcher
+    languageSelect.addEventListener("change", () => {
+      const lang = languageSelect.value;
+      if (lang === "id") {
+        document.getElementById("game-title").textContent = "Dam-Daman";
+        document.getElementById("game-subtitle").textContent = "Permainan Strategi 5x5";
+
+        document.getElementById("play-button").textContent = "Mulai Permainan";
+        document.getElementById("tutorial-button").textContent = "Cara Bermain";
+        document.getElementById("settings-button").textContent = "Pengaturan";
+        document.getElementById("about-button").textContent = "Tentang";
+
+        document.getElementById("mode-title").textContent = "Pilih Mode";
+        document.querySelector("#howto-popup h2").textContent = "Cara Bermain";
+        document.getElementById("howto-text").innerHTML = `
+          • Untuk Mode Challenge harus menjawab pertanyaan matematika terlebih dahulu.<br>
+          • Gerakkan pion ke depan, belakang, kiri, kanan, atau diagonal.<br>
+          • Lompat pion lawan untuk memakannya.<br>
+          • Pion lawan yang dilompati akan hilang dari papan.<br>
+          • Pemain menang jika lawan tidak bisa bergerak atau pionnya habis.
+        `;
+        document.getElementById("close-howto").textContent = "Tutup";
+
+        document.getElementById("settings-title").textContent = "Pengaturan";
+        document.getElementById("label-music").textContent = "Volume Musik";
+        document.getElementById("label-sfx").textContent = "Volume Efek Suara";
+        document.getElementById("label-lang").textContent = "Bahasa";
+        closeSettings.textContent = "Tutup";
+
+        document.getElementById("about-title").textContent = "Tentang Aplikasi";
+        document.getElementById("close-about").textContent = "Tutup";
+      } else {
+        document.getElementById("game-title").textContent = "Dam-Daman";
+        document.getElementById("game-subtitle").textContent = "5x5 Strategy Game";
+
+        document.getElementById("play-button").textContent = "Start Game";
+        document.getElementById("tutorial-button").textContent = "How to Play";
+        document.getElementById("settings-button").textContent = "Settings";
+        document.getElementById("about-button").textContent = "About";
+
+        document.getElementById("mode-title").textContent = "Select Mode";
+        document.querySelector("#howto-popup h2").textContent = "How to Play";
+        document.getElementById("howto-text").innerHTML = `
+          • For Challenge Mode, you must answer math questions first.<br>
+          • Move pieces forward, backward, left, right, or diagonally.<br>
+          • Jump over opponent pieces to capture them.<br>
+          • Captured pieces are removed from the board.<br>
+          • Win by eliminating opponent pieces or blocking their moves.
+        `;
+        document.getElementById("close-howto").textContent = "Close";
+
+        document.getElementById("settings-title").textContent = "Settings";
+        document.getElementById("label-music").textContent = "Music Volume";
+        document.getElementById("label-sfx").textContent = "Sound Effect Volume";
+        document.getElementById("label-lang").textContent = "Language";
+        closeSettings.textContent = "Close";
+
+        document.getElementById("about-title").textContent = "About App";
+        document.getElementById("close-about").textContent = "Close";
+      }
+    });
+
+    // About Popup
+    const aboutBtn = document.getElementById("about-button");
+    const aboutPopup = document.getElementById("about-popup");
+    const closeAbout = document.getElementById("close-about");
+    const closeAboutX = document.getElementById("close-about-x");
+
+    aboutBtn.addEventListener("click", () => aboutPopup.style.display = "flex");
+    closeAbout.addEventListener("click", () => aboutPopup.style.display = "none");
+    closeAboutX.addEventListener("click", () => aboutPopup.style.display = "none");
+    aboutPopup.addEventListener("click", (e) => {
+      if (e.target === aboutPopup) aboutPopup.style.display = "none";
+    });
+
+    // Button Sound Effects
+    const buttons = document.querySelectorAll(".game-button, .popup-button");
+    buttons.forEach(btn => {
+      btn.addEventListener("mouseenter", () => {
+        hoverSound.currentTime = 0;
+        hoverSound.play().catch(() => {});
+      });
+      btn.addEventListener("click", () => {
+        clickSound.currentTime = 0;
+        clickSound.play().catch(() => {});
+      });
+    });
+
+    // Element SDK Integration
+    const defaultConfig = {
+      game_title: "Dam-Daman",
+      subtitle: "5x5 Strategy Game",
+      play_button: "Start Game",
+      tutorial_button: "How to Play",
+      settings_button: "Settings",
+      background_color: "#1a1a2e",
+      surface_color: "rgba(255, 255, 255, 0.06)",
+      text_color: "#ffffff",
+      primary_action: "#ff5733",
+      secondary_action: "#3b82f6"
+    };
+
+    if (window.elementSdk) {
+      window.elementSdk.init({
+        defaultConfig,
+        onConfigChange: (config) => {
+          document.getElementById('game-title').textContent = config.game_title || defaultConfig.game_title;
+          document.getElementById('game-subtitle').textContent = config.subtitle || defaultConfig.subtitle;
+          document.getElementById('play-button').textContent = config.play_button || defaultConfig.play_button;
+          document.getElementById('tutorial-button').textContent = config.tutorial_button || defaultConfig.tutorial_button;
+          document.getElementById('settings-button').textContent = config.settings_button || defaultConfig.settings_button;
+
+          if (config.background_color) {
+            document.body.style.background = `linear-gradient(135deg, ${config.background_color} 0%, #16213e 50%, #0f3460 100%)`;
+          }
+          if (config.surface_color) {
+            document.querySelector('.menu-card').style.background = config.surface_color;
+          }
         }
-        musicOn = !musicOn;
-        });
-
-        // Force autoplay after any body click (browser autoplay block)
-        document.body.addEventListener("click", () => {
-            if (musicOn) bgMusic.play();
-        }, { once: true });
-
-        // Default configuration
-        const defaultConfig = {
-            game_title: "Dam-Daman",
-            subtitle: "5x5 Strategy Game",
-            play_button: "Start Game",
-            tutorial_button: "How to Play",
-            settings_button: "Settings",
-            background_color: "#1a1a2e",
-            surface_color: "rgba(255, 255, 255, 0.05)",
-            text_color: "#ffffff",
-            primary_action: "#ff5733",
-            secondary_action: "#3b82f6",
-            font_family: "Inter",
-            font_size: 16
-        };
-
-            // START GAME
-            // UBAH: Aksi tombol "Start Game" menjadi membuka popup
-            document.getElementById('play-button').addEventListener('click', function() {
-                // ... efek visual tombol lama ...
-                this.style.transform = 'scale(0.95)';
-                setTimeout(() => {
-                    this.style.transform = '';
-                    // Buka popup pilihan mode, bukan langsung ke coba.html
-                    document.getElementById('mode-selection-popup').style.display = "flex";
-                }, 150);
-            });
-
-            // BARU: Mode Selection Handlers
-            document.getElementById('single-player-btn').addEventListener('click', function() {
-                // Redirect ke coba.html dengan parameter mode=single
-                window.location.href = "karakter.html?mode=single";
-            });
-
-            document.getElementById('multiplayer-btn').addEventListener('click', function() {
-                // Redirect ke coba.html dengan parameter mode=multi
-                window.location.href = "karakter.html?mode=multi";
-            });
-
-            // BARU: Logic Tutup Popup Mode
-            const modePopup = document.getElementById("mode-selection-popup");
-            const closeModeX = document.getElementById("close-mode-selection-x");
-
-            closeModeX.addEventListener("click", () => {
-                modePopup.style.display = "none";
-            });
-
-            modePopup.addEventListener("click", (e) => {
-                if (e.target === modePopup) {
-                    modePopup.style.display = "none";
-                }
-            });
-
-
-            // HOW TO PLAY POPUP
-            const howtoBtn = document.getElementById("tutorial-button");
-            const popupHowto = document.getElementById("howto-popup");
-            const closeHowto = document.getElementById("close-howto");
-
-            howtoBtn.addEventListener("click", () => {
-                howtoBtn.style.transform = "scale(0.95)";
-                setTimeout(() => howtoBtn.style.transform = "", 150);
-
-                popupHowto.style.display = "flex";
-            });
-
-            closeHowto.addEventListener("click", () => {
-                popupHowto.style.display = "none";
-            });
-
-            popupHowto.addEventListener("click", (e) => {
-                if (e.target === popupHowto) {
-                    popupHowto.style.display = "none";
-                }
-            });
-
-            const closeHowtoX = document.getElementById("close-howto-x");
-            closeHowtoX.addEventListener("click", () => popupHowto.style.display = "none");
-
-
-            // SETTINGS POPUP
-            const settingsBtn = document.getElementById("settings-button");
-            const settingsPopup = document.getElementById("settings-popup");
-            const closeSettings = document.getElementById("close-settings");
-
-            const musicSlider = document.getElementById("music-slider");
-            const bgMusic = document.getElementById("bg-music");
-            const sfxSlider = document.getElementById("sfx-slider");
-            
-            const languageSelect = document.getElementById("language-select");
-
-            // 🔥 Buka SETTINGS + animasi tombol
-            settingsBtn.addEventListener("click", () => {
-                settingsBtn.style.transform = "scale(0.95)";
-                setTimeout(() => settingsBtn.style.transform = "", 150);
-
-                settingsPopup.style.display = "flex";  // popup muncul
-            });
-
-            // 🔥 Tutup
-            closeSettings.addEventListener("click", () => {
-                settingsPopup.style.display = "none";
-            });
-
-            // Klik luar untuk tutup
-            settingsPopup.addEventListener("click", (e) => {
-                if (e.target === settingsPopup) {
-                    settingsPopup.style.display = "none";
-                }
-            });
-
-            // 🎵 Slider kendalikan musik
-            musicSlider.addEventListener("input", () => {
-                bgMusic.volume = musicSlider.value / 100;
-            });
-
-            // 🔊 Slider kendalikan sound effect (hover & click)
-            sfxSlider.addEventListener("input", () => {
-            const volume = sfxSlider.value / 100;
-            hoverSound.volume = volume;
-            clickSound.volume = volume;
-            });
-
-
-
-            // 🌍 Sistem pergantian bahasa lengkap
-            languageSelect.addEventListener("change", () => {
-                const lang = languageSelect.value;
-
-                if (lang === "id") {
-                    document.getElementById("game-title").textContent = "Dam-Daman";
-                    document.getElementById("game-subtitle").textContent = "Permainan Strategi 5x5";
-
-                    // MENU
-                    document.getElementById("play-button").textContent = "Mulai Permainan";
-                    document.getElementById("tutorial-button").textContent = "Cara Bermain";
-                    document.getElementById("settings-button").textContent = "Pengaturan";
-                    document.getElementById("about-button").textContent = "Tentang";
-
-                    // POPUP HOW TO PLAY
-                    document.querySelector("#howto-popup h2").textContent = "Cara Bermain";
-                    document.querySelector("#howto-popup p").innerHTML = `
-                        • Gerakkan pion ke segala arah.<br>
-                        • Lompat pion lawan untuk memakannya.<br>
-                        • Pion lawan hilang setelah dilompati.<br>
-                        • Menang jika lawan tidak dapat bergerak.<br>
-                    `;
-                    document.getElementById("close-howto").textContent = "Tutup";
-                    closeSettings.textContent = "Tutup";
-                }
-
-                if (lang === "en") {
-                    document.getElementById("game-title").textContent = "Dam-Daman";
-                    document.getElementById("game-subtitle").textContent = "5x5 Strategy Game";
-
-                    // MENU
-                    document.getElementById("play-button").textContent = "Start Game";
-                    document.getElementById("tutorial-button").textContent = "How to Play";
-                    document.getElementById("settings-button").textContent = "Settings";
-                    document.getElementById("exit-button").textContent = "Exit";
-
-                    // POPUP HOW TO PLAY
-                    document.querySelector("#howto-popup h2").textContent = "How to Play";
-                    document.querySelector("#howto-popup p").innerHTML = `
-                        • Move pieces in any direction.<br>
-                        • Jump over enemy to capture.<br>
-                        • Enemy piece disappears after jump.<br>
-                        • Win if opponent cannot move.<br>
-                    `;
-                    document.getElementById("close-howto").textContent = "Close";
-                    closeSettings.textContent = "Close";
-                }
-            });
-
-
-           // ABOUT POPUP
-           const aboutBtn = document.getElementById("about-button");
-            const aboutPopup = document.getElementById("about-popup");
-            const closeAbout = document.getElementById("close-about");
-            const closeAboutX = document.getElementById("close-about-x");
-
-            aboutBtn.addEventListener("click", () => {
-                aboutBtn.style.transform = "scale(0.95)";
-                setTimeout(() => aboutBtn.style.transform = "", 150);
-
-                aboutPopup.style.display = "flex";
-            });
-
-            closeAbout.addEventListener("click", () => {
-                aboutPopup.style.display = "none";
-            });
-
-            closeAboutX.addEventListener("click", () => {
-                aboutPopup.style.display = "none";
-            });
-
-            aboutPopup.addEventListener("click", (e) => {
-                if(e.target === aboutPopup){
-                    aboutPopup.style.display = "none";
-                }
-            });
-
-          
-            // … script lanjutan kamu …
-
-            if (window.elementSdk) {
-                window.elementSdk.init({
-                    defaultConfig,
-                    onConfigChange,
-                    mapToCapabilities,
-                    mapToEditPanelValues
-                });
-            }
-
-            // Ambil audio
-            const hoverSound = document.getElementById("hover-sound");
-            const clickSound = document.getElementById("click-sound");
-
-            // Ambil semua tombol game
-            const buttons = document.querySelectorAll(".game-button");
-
-            // Loop untuk tiap tombol
-            buttons.forEach(btn => {
-                // Saat kursor hover
-                btn.addEventListener("mouseenter", () => {
-                    hoverSound.currentTime = 0; // restart suara jika sedang diputar
-                    hoverSound.play();
-                });
-
-                // Saat tombol di klik
-                btn.addEventListener("click", () => {
-                    clickSound.currentTime = 0; // restart suara jika sedang diputar
-                    clickSound.play();
-                });
-            });
-
-            
-        // Element SDK implementation
-        async function onConfigChange(config) {
-            const customFont = config.font_family || defaultConfig.font_family;
-            const baseFontStack = '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
-            const baseSize = config.font_size || defaultConfig.font_size;
-            
-            // Update text content
-            document.getElementById('game-title').textContent = config.game_title || defaultConfig.game_title;
-            document.getElementById('game-subtitle').textContent = config.subtitle || defaultConfig.subtitle;
-            document.getElementById('play-button').textContent = config.play_button || defaultConfig.play_button;
-            document.getElementById('tutorial-button').textContent = config.tutorial_button || defaultConfig.tutorial_button;
-            document.getElementById('settings-button').textContent = config.settings_button || defaultConfig.settings_button;
-            
-            // Update colors
-            const backgroundColor = config.background_color || defaultConfig.background_color;
-            const surfaceColor = config.surface_color || defaultConfig.surface_color;
-            const textColor = config.text_color || defaultConfig.text_color;
-            const primaryAction = config.primary_action || defaultConfig.primary_action;
-            const secondaryAction = config.secondary_action || defaultConfig.secondary_action;
-            
-            document.body.style.background = `linear-gradient(135deg, ${backgroundColor} 0%, #16213e 50%, #0f3460 100%)`;
-            document.querySelector('.menu-card').style.background = surfaceColor;
-            document.getElementById('game-subtitle').style.color = textColor;
-            
-            // Update primary button
-            const primaryButton = document.getElementById('play-button');
-            primaryButton.style.background = `linear-gradient(135deg, ${primaryAction}, #e74c3c)`;
-            primaryButton.style.boxShadow = `0 8px 24px ${primaryAction}4D`;
-            
-            // Update secondary buttons
-            const secondaryButtons = [document.getElementById('tutorial-button'), document.getElementById('settings-button')];
-            secondaryButtons.forEach(button => {
-                button.style.background = `linear-gradient(135deg, ${secondaryAction}, #2563eb)`;
-                button.style.boxShadow = `0 8px 24px ${secondaryAction}4D`;
-            });
-            
-            // Update fonts
-            document.body.style.fontFamily = `${customFont}, ${baseFontStack}`;
-            
-            // Update font sizes proportionally
-            document.getElementById('game-title').style.fontSize = `${baseSize * 4}px`;
-            document.getElementById('game-subtitle').style.fontSize = `${baseSize * 1.2}px`;
-            document.getElementById('play-button').style.fontSize = `${baseSize * 1.3}px`;
-            document.getElementById('tutorial-button').style.fontSize = `${baseSize * 1.1}px`;
-            document.getElementById('settings-button').style.fontSize = `${baseSize * 1.1}px`;
-            
-            
-          
-
-        }
-
-        function mapToCapabilities(config) {
-            return {
-                recolorables: [
-                    {
-                        get: () => config.background_color || defaultConfig.background_color,
-                        set: (value) => {
-                            config.background_color = value;
-                            window.elementSdk.setConfig({ background_color: value });
-                        }
-                    },
-                    {
-                        get: () => config.surface_color || defaultConfig.surface_color,
-                        set: (value) => {
-                            config.surface_color = value;
-                            window.elementSdk.setConfig({ surface_color: value });
-                        }
-                    },
-                    {
-                        get: () => config.text_color || defaultConfig.text_color,
-                        set: (value) => {
-                            config.text_color = value;
-                            window.elementSdk.setConfig({ text_color: value });
-                        }
-                    },
-                    {
-                        get: () => config.primary_action || defaultConfig.primary_action,
-                        set: (value) => {
-                            config.primary_action = value;
-                            window.elementSdk.setConfig({ primary_action: value });
-                        }
-                    },
-                    {
-                        get: () => config.secondary_action || defaultConfig.secondary_action,
-                        set: (value) => {
-                            config.secondary_action = value;
-                            window.elementSdk.setConfig({ secondary_action: value });
-                        }
-                    }
-                ],
-                borderables: [],
-                fontEditable: {
-                    get: () => config.font_family || defaultConfig.font_family,
-                    set: (value) => {
-                        config.font_family = value;
-                        window.elementSdk.setConfig({ font_family: value });
-                    }
-                },
-                fontSizeable: {
-                    get: () => config.font_size || defaultConfig.font_size,
-                    set: (value) => {
-                        config.font_size = value;
-                        window.elementSdk.setConfig({ font_size: value });
-                    }
-                }
-            };
-        }
-
-        function mapToEditPanelValues(config) {
-            return new Map([
-                ["game_title", config.game_title || defaultConfig.game_title],
-                ["subtitle", config.subtitle || defaultConfig.subtitle],
-                ["play_button", config.play_button || defaultConfig.play_button],
-                ["tutorial_button", config.tutorial_button || defaultConfig.tutorial_button],
-                ["settings_button", config.settings_button || defaultConfig.settings_button]
-            ]);
-        }
-
-        // Initialize Element SDK
-        if (window.elementSdk) {
-            window.elementSdk.init({
-                defaultConfig,
-                onConfigChange,
-                mapToCapabilities,
-                mapToEditPanelValues
-            });
-        }
-    </script>
- <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'99e4d7b5e7e5ea7d',t:'MTc2MzEwNTgzNi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+      });
+    }
+  </script>
+</body>
 </html>
