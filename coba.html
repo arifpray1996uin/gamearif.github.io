@@ -4,44 +4,39 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Game Dam-Daman</title>
+  <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
+  <script src="/_sdk/element_sdk.js" type="text/javascript"></script>
+  <script src="https://cdn.tailwindcss.com" type="text/javascript"></script>
   <style>
-        body {
+        * {
             box-sizing: border-box;
+        }
+
+        body {
             margin: 0;
-            padding: 0;
+            padding: 20px 10px;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: flex-start;
-            padding-top: 80px;
             min-height: 100vh;
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            /* Latar belakang gelap dari Cover.html */
             background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
-            color: #f0f0f0; /* Warna teks default terang */
+            color: #f0f0f0;
             position: relative;
             overflow-x: hidden;
         }
 
-        .game-container {
-            background: rgba(255, 255, 255, 0.05); /* Background sedikit transparan */
-            backdrop-filter: blur(8px); /* Efek Glassmorphism */
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 25px;
-            padding: 60px;
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.5); /* Shadow lebih kuat */
-            max-width: 900px; /* Lebar diperbesar untuk 3 kolom */
-            width: 90%;
-            z-index: 10;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        /* Title Section */
+        .title-section {
+            text-align: center;
+            margin-top: 10px;
+            margin-bottom: 20px;
+            animation: slideDown 0.8s ease-out;
         }
 
-        .game-container:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7);
-        }
         .game-title {
-            font-size: 4rem;
+            font-size: clamp(2.2rem, 6vw, 4rem);
             font-weight: 900;
             background: linear-gradient(135deg, #ff5733, #ffa726, #ff5733);
             background-size: 200% 200%;
@@ -49,253 +44,129 @@
             -webkit-text-fill-color: transparent;
             background-clip: text;
             text-shadow: 0 4px 20px rgba(255, 87, 51, 0.3);
-            margin: 5;
-            letter-spacing: -2px;
+            margin: 0;
+            letter-spacing: -1px;
             animation: titleGlow 3s ease-in-out infinite alternate;
         }
-    /* Tombol floating di pojok kanan atas */
-        .floating-settings {
-        position: fixed;
-        top: 20px;
-        right: 20px;
-        z-index: 999;
-        background: rgba(255,255,255,0.15);
-        border: 2px solid rgba(255,255,255,0.3);
-        backdrop-filter: blur(10px);
-        color: #fff;
-        font-size: 22px;
-        padding: 12px 16px;
-        border-radius: 14px;
-        cursor: pointer;
-        transition: 0.3s;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-        }
 
-        .floating-settings:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 8px 16px rgba(0,0,0,0.3);
-        }
-    
-        /* Popup Settings */
-        #settings-popup {
-        position: fixed;
-        top: 0; left: 0;
-        width: 100%; height: 100%;
-        background: rgba(0,0,0,0.6);
-        display: none;
-        justify-content: center;
-        align-items: center;
-        z-index: 100;
-        }
-
-        .close-popup {
-            position: absolute;
-            top: 10px;
-            right: 15px;
-            font-size: 1.5rem;
-            font-weight: bold;
-            cursor: pointer;
-            color: #333;
-        }
-
-        .close-popup:hover {
-            color: #e74c3c;
-        }
-        
-        .settings-content {
-            width: 420px;
-            max-width: 90%;
-            background: linear-gradient(135deg, #1e293b, #0f172a);
-            border-radius: 20px;
-            padding: 30px;
-            color: white;
-            text-align: center;
-            position: relative;
-            box-shadow: 0 0 35px rgba(0, 150, 255, 0.3);
-            animation: popupAppear 0.35s ease;
-            border: 2px solid rgba(255, 255, 255, 0.15);
-        }
-
-        .settings-btn {
-        display: block;
-        width: 80%;
-        margin: 10px auto;
-        padding: 12px;
-        font-size: 1rem;
-        border-radius: 15px;
-        border: none;
-        background: linear-gradient(135deg,#667eea,#764ba2);
-        color: white;
-        cursor: pointer;
-        transition: transform 0.2s, box-shadow 0.2s;
-        }
-
-        .settings-btn:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 6px 12px rgba(0,0,0,0.2);
-        }
-
-        .sound-settings {
-        margin: 15px 0;
-        padding: 10px;
-        border: 1px solid #ddd;
-        border-radius: 10px;
-        }
-
-        .sound-settings label {
-        display: block;
-        margin-top: 10px;
-        font-weight: bold;
-        color: #555;
-        }
-
-        .language-setting {
-            margin: 15px 0;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 10px;
-        }
-
-        .language-setting select {
-            padding: 8px;
-            border-radius: 8px;
-            width: 80%;
-            margin-top: 8px;
-            font-size: 1rem;
-            border: 1px solid #ccc;
-        }
-
-
-        h1 {
-            color: #ffffff;
-            font-size: 2.2rem;
-            margin-bottom: 15px;
-            letter-spacing: 1px;
-            text-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
-        }
-
-        .game-info {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-
-        .current-player {
-            ffont-size: 1.4rem;
-            font-weight: 500;
-            margin-bottom: 25px;
-            padding: 10px 20px;
-            border-radius: 10px;
-            background: rgba(0, 0, 0, 0.3);
+        /* Main Container Layout */
+        .game-container {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(8px);
             border: 1px solid rgba(255, 255, 255, 0.1);
-            color: #ffffff;
-        }
-
-        .player-column {
+            border-radius: 25px;
+            padding: 30px 20px;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.5);
+            max-width: 950px;
+            width: 100%;
+            z-index: 10;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
             display: flex;
             flex-direction: column;
             align-items: center;
-            width: 150px;
+            gap: 20px;
+        }
+
+        .game-container:hover {
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7);
+        }
+
+        /* Layout 3 Kolom Responsif (Pemain Merah - Papan Game - Pemain Biru) */
+        .game-layout {
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            gap: 30px;
+        }
+
+        /* Avatar & Info Pemain */
+        .avatar-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
             text-align: center;
-            padding: 15px;
-            border-radius: 15px;
-            background: rgba(0, 0, 0, 0.2); /* Background gelap transparan */
-            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            width: 160px;
+            flex-shrink: 0;
+            transition: transform 0.3s ease;
+        }
+
+        .avatar-img {
+            width: clamp(90px, 15vw, 150px);
+            height: clamp(90px, 15vw, 150px);
+            object-fit: contain;
+            border-radius: 50%;
+            border: 4px solid rgba(255, 255, 255, 0.2);
             transition: all 0.3s ease;
+            cursor: pointer;
+            background: rgba(0, 0, 0, 0.2);
         }
 
         .player-name {
             font-family: 'Inter', sans-serif;
-            font-weight: 600;
-            margin-top: 5px;
-            font-size: 1.2rem;
-            margin-bottom: 15px;
+            font-weight: 700;
+            margin-top: 10px;
+            font-size: clamp(1rem, 2.5vw, 1.2rem);
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
         }
+        .player-name.red { color: #ff6b6b; }
+        .player-name.blue { color: #4ecdc4; }
 
-        .player-red {
-            color: #ff6b6b;
-        }
-
-        .player-blue {
-            color:  #4ecdc4;
-        }
-
-        .board-wrapper {
-            display: flex;
-            justify-content: space-around;
-            align-items: flex-start;
-            margin-top: 20px;
-            gap: 20px;
-        }
-
-        .avatar-zone {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            width: 80%;
-            margin: -350px auto 20px auto;
-            margin-top: -450px;
-        }
-
-        .avatar-wrapper {
-            text-align: center;
-            width: 180px;
-        }
-
-        .avatar-img {
-            width: 160px;
-            height: 160px;
-            object-fit: contain;
-            border-radius: 50%;
-            border: 5px solid rgba(255, 255, 255, 0.2); /* Border default lebih halus */
-            transition: all 0.3s ease;
-            cursor: pointer;
-        }
-
-        .player-name {
-            font-family: Poppins, sans-serif;
-            font-weight: 600;
-            margin-top: 8px;
-            font-size: 18px;
-        }
-        .player-name.red { color: #d63031; }
-        .player-name.blue { color: #0984e3; }
-
-        /* Skor */
         .player-score {
-            margin-top: 3px;
-            font-size: 24px;
+            margin-top: 8px;
+            font-size: clamp(1.2rem, 3vw, 1.5rem);
             font-weight: bold;
             color: #fff;
             background: rgba(0,0,0,0.4);
-            padding: 5px 18px;
+            padding: 6px 20px;
             border-radius: 12px;
+            border: 1px solid rgba(255,255,255,0.1);
+            min-width: 60px;
         }
 
-        /* === Efek Glow + Bounce Saat Giliran === */
-        .active-turn .avatar-img {
+        /* Glow & Bounce Turn Indicator */
+        .avatar-wrapper.active-turn .avatar-img {
             animation: bounce 0.8s infinite alternate ease-in-out;
-            box-shadow: 0 0 18px 6px rgba(255,255,255,0.7);
-            border-color: #2ecc71;
-            transform: scale(1.1);
+            transform: scale(1.08);
+        }
+
+        #red-avatar-box.active-turn .avatar-img { 
+            border-color: #ff6b6b; 
+            box-shadow: 0 0 25px rgba(255, 107, 107, 0.9);
+        }
+        #blue-avatar-box.active-turn .avatar-img { 
+            border-color: #4ecdc4; 
+            box-shadow: 0 0 25px rgba(78, 205, 196, 0.9);
         }
 
         @keyframes bounce {
-            from { transform: translateY(0); }
-            to { transform: translateY(-12px); }
+            from { transform: translateY(0) scale(1.05); }
+            to { transform: translateY(-8px) scale(1.05); }
         }
 
-
+        /* Board Styling */
+        .board-container {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            max-width: 450px;
+        }
 
         .board {
             display: grid;
             grid-template-columns: repeat(5, 1fr);
             gap: 6px;
             background: #2c3e50;
-            padding: 14px;
-            border-radius: 15px;
-            margin: 0 auto;
-            max-width: 480px;
+            padding: 12px;
+            border-radius: 16px;
+            width: 100%;
             aspect-ratio: 1;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6), inset 0 0 15px rgba(0,0,0,0.5);
+            border: 2px solid rgba(255, 255, 255, 0.1);
         }
 
         .cell {
@@ -305,400 +176,240 @@
             justify-content: center;
             cursor: pointer;
             background-color: #3d5a80;
+            border-radius: 8px;
+            transition: all 0.2s ease;
         }
-
-        
 
         .cell:hover {
             background: #d5dbdb;
-            transform: scale(1.05);
+            transform: scale(1.03);
         }
 
         .cell.selected {
             background: #f39c12;
-            box-shadow: 0 0 20px rgba(243, 156, 18, 0.6);
+            box-shadow: 0 0 15px rgba(243, 156, 18, 0.8);
         }
 
         .cell.valid-move {
-            background-color: #7bed9f; /* Hijau terang untuk langkah valid */
-            opacity: 0.8;
-            transition: background-color 0.1s;
+            background-color: #7bed9f;
+            opacity: 0.9;
         }
 
         .cell.valid-move:hover {
             background-color: #2ed573;
         }
 
-        .cell.last-move {
-            box-shadow: inset 0 0 0 3px #feca57;
-        }
-
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.1); }
-            100% { transform: scale(1); }
-        }
-
+        /* Pieces */
         .piece {
-            width: 70%;
-            height: 70%;
+            width: 75%;
+            height: 75%;
             border-radius: 50%;
-            box-shadow: 0 3px 5px rgba(0, 0, 0, 0.4);
-            transition: transform 0.1s ease-in-out;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+            transition: transform 0.15s ease;
             cursor: pointer;
             position: relative;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.5rem;
+            font-size: clamp(1rem, 2vw, 1.5rem);
         }
 
         .piece.red {
-            background: linear-gradient(135deg, #e74c3c, #c0392b);
+            background: linear-gradient(135deg, #ff6b6b, #c0392b);
+            border: 2px solid #ff9ff3;
         }
 
         .piece.blue {
-            background: linear-gradient(135deg, #3498db, #2980b9);
+            background: linear-gradient(135deg, #48dbfb, #2980b9);
+            border: 2px solid #9aec8f;
         }
 
-        .piece.red.king::before { content: '👑'; color: #000; }
-        .piece.blue.king::before { content: '👑'; color: #000; }
-
         .piece:hover {
-            transform: scale(1.1);
-            box-shadow: 0 6px 12px rgba(0,0,0,0.3);
+            transform: scale(1.12);
         }
 
         .piece.selected {
-            border: 3px solid #feca57; /* Kuning terang untuk seleksi */
-            box-shadow: 0 0 10px #feca57, 0 0 20px rgba(254, 202, 87, 0.5);
+            border: 3px solid #feca57;
+            box-shadow: 0 0 12px #feca57;
             transform: scale(1.1);
             z-index: 2;
         }
 
-        .piece.red:hover {
-            box-shadow: 0 0 15px rgba(231, 76, 60, 0.8);
-            transform: scale(1.15);
-        }
-        .piece.blue:hover {
-            box-shadow: 0 0 15px rgba(52, 152, 219, 0.8);
-            transform: scale(1.15);
-        }
-
-        .score-board {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 20px;
-            padding: 15px;
-            background: #f8f9fa;
-            border-radius: 10px;
-            align-items: center;
-        }
-
-        .score {
-            text-align: center;
-            flex: 1;
-            display: flex; /* Jadikan flex container */
-            flex-direction: column;
-            align-items: center;
-            position: relative; /* Untuk menampung efek glow */
-            padding: 10px; /* Tambahkan padding */
-        }
-
-        .avatar-display {
-            width: 60px; /* Ukuran avatar */
-            height: 60px;
-            border-radius: 50%;
-            background-size: cover;
-            background-position: center;
-            margin-bottom: 5px;
-            border: 4px solid transparent; /* Border default transparan */
-            box-shadow: 0 0 5px rgba(0,0,0,0.2);
-            transition: all 0.3s ease;
-        }
-
-        /* Kebutuhan untuk Glow Effect */
-        .score.active .avatar-display {
-            border-color: #2ecc71; /* Warna border saat aktif */
-            box-shadow: 0 0 15px rgba(46, 204, 113, 0.8), 0 0 25px rgba(46, 204, 113, 0.5); /* Efek glow */
-            transform: scale(1.1);
-        }
-        /* === Efek Glow + Bounce Saat Giliran (Disesuaikan dengan tema gelap) === */
-        .player-column.active-turn .avatar-img {
-            animation: bounce 0.8s infinite alternate ease-in-out;
-            transform: scale(1.05);
-        }
-
-        #red-avatar-box.active-turn .avatar-img { 
-            border-color: #ff6b6b; 
-            box-shadow: 0 0 20px rgba(255, 107, 107, 0.8); /* Glow Merah */
-        }
-        #blue-avatar-box.active-turn .avatar-img { 
-            border-color: #4ecdc4; 
-            box-shadow: 0 0 20px rgba(78, 205, 196, 0.8); /* Glow Cyan */
-        }
-
-        @keyframes bounce {
-            from { transform: translateY(0) scale(1.05); }
-            to { transform: translateY(-8px) scale(1.05); }
-        }
-
-        .score.active .score-label {
-            font-weight: bold;
-            color: #2ecc71;
-        }
-
-        .player-score-box {
-            margin-top: 15px;
-            padding: 10px 15px;
-            border-radius: 10px;
-            background: rgba(0, 0, 0, 0.5); /* Kotak skor sangat gelap */
-            width: 100%;
-        }
-
-        .score-label {
-            font-size: 0.85rem;
-            font-weight: 500;
-            color: #cccccc;
-            margin-bottom: 3px;
-        }
-
-        .score-value {
-            order: 3; 
-            font-size: 1.5rem;
-            font-weight: bold;
-            margin-top: 2px;
-        }
-
-        .player-red .avatar-display { border-color: #e74c3c; }
-        .player-blue .avatar-display { border-color: #3498db; }
-
-        .reset-btn {
-            background: linear-gradient(135deg, #e74c3c, #c0392b);
-            color: white;
-            border: none;
-            padding: 12px 24px;
-            border-radius: 25px;
-            font-size: 1rem;
-            font-weight: bold;
+        /* Floating Settings Button */
+        .floating-settings {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 99;
+            background: rgba(255,255,255,0.15);
+            border: 2px solid rgba(255,255,255,0.3);
+            backdrop-filter: blur(10px);
+            color: #fff;
+            font-size: 22px;
+            padding: 10px 14px;
+            border-radius: 14px;
             cursor: pointer;
-            transition: all 0.3s ease;
-            margin-top: 20px;
-            width: 100%;
+            transition: 0.3s;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
         }
 
-        .reset-btn:hover {
+        .floating-settings:hover {
             transform: translateY(-2px);
-            box-shadow: 0 8px 16px rgba(231, 76, 60, 0.3);
+            box-shadow: 0 8px 16px rgba(0,0,0,0.3);
+            background: rgba(255,255,255,0.25);
         }
 
-        .game-rules {
-            margin-top: 20px;
-            padding: 15px;
-            background: #f8f9fa;
-            border-radius: 10px;
-            font-size: 0.9rem;
-            color: #666;
-        }
-
-        .game-rules h3 {
-            color: #333;
-            margin-top: 0;
-        }
-
-        @media (max-width: 480px) {
-            .game-container {
-                padding: 20px;
-            }
-            
-            h1 {
-                font-size: 2rem;
-            }
-            
-            .title-section {
-            text-align: center;
-            margin-top: -20px;
-            margin-bottom: 5rem;
-            animation: slideDown 0.8s ease-out;
-            }
-
-            .board {
-                box-shadow: 0 0 0 5px #0f3460, 0 0 30px rgba(0, 0, 0, 0.8); /* Border dan shadow gelap */
-                border-radius: 5px;
-                overflow: hidden;
-                background: #293241; /* Warna dasar papan */
-                max-width: 300px;
-            }
-        }
-
-        /* Popup awal "Are You Ready?" */
-        .start-popup {
+        /* Popup Overlays & Settings */
+        .settings-popup, .start-popup, #winnerPopup {
             position: fixed;
             top: 0; left: 0;
-            width: 100%; height: 100%;
-            background: rgba(0,0,0,0.75);
-            display: flex;
+            width: 100vw; height: 100vh;
+            background: rgba(0, 0, 0, 0.75);
+            display: none;
             justify-content: center;
             align-items: center;
-            z-index: 200;
-            backdrop-filter: blur(4px);
+            z-index: 1000;
+            backdrop-filter: blur(6px);
+            padding: 15px;
+        }
+
+        .close-popup {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            font-size: 1.8rem;
+            font-weight: bold;
+            cursor: pointer;
+            color: #aaa;
+            transition: color 0.2s;
+        }
+
+        .close-popup:hover {
+            color: #e74c3c;
+        }
+
+        .settings-content {
+            width: 100%;
+            max-width: 420px;
+            background: linear-gradient(135deg, #1e293b, #0f172a);
+            border-radius: 20px;
+            padding: 25px 20px;
+            color: white;
+            text-align: center;
+            position: relative;
+            box-shadow: 0 0 35px rgba(0, 150, 255, 0.3);
+            animation: popupAppear 0.35s ease;
+            border: 2px solid rgba(255, 255, 255, 0.15);
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .settings-btn, .popup-button {
+            display: block;
+            width: 85%;
+            margin: 12px auto;
+            padding: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            border-radius: 12px;
+            border: none;
+            background: linear-gradient(135deg,#667eea,#764ba2);
+            color: white;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .settings-btn:hover, .popup-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 14px rgba(0,0,0,0.3);
+        }
+
+        .sound-settings, .language-setting {
+            margin: 15px 0;
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+        }
+
+        .sound-settings label, .language-setting label {
+            display: block;
+            margin-top: 8px;
+            margin-bottom: 4px;
+            font-weight: 600;
+            color: #ddd;
+            font-size: 0.95rem;
+        }
+
+        .sound-settings input[type="range"] {
+            width: 80%;
+            cursor: pointer;
+        }
+
+        .language-setting select {
+            padding: 8px 12px;
+            border-radius: 8px;
+            width: 80%;
+            margin-top: 6px;
+            font-size: 0.95rem;
+            border: 1px solid #444;
+            background: #1e293b;
+            color: #fff;
+        }
+
+        /* VS Start Popup */
+        .start-popup {
+            z-index: 2000;
         }
 
         .vs-container {
-        display: flex;
-        align-items: center;
-        gap: 40px;
-        animation: fadeIn 0.8s ease-out;
-            }
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: clamp(15px, 5vw, 40px);
+            animation: fadeIn 0.8s ease-out;
+            flex-wrap: wrap;
+        }
 
         .vs-avatar {
-            width: 220px;
-            height: 220px;
+            width: clamp(100px, 25vw, 200px);
+            height: clamp(100px, 25vw, 200px);
             object-fit: contain;
             border-radius: 50%;
-            border: 6px solid white;
-            animation: avatarIntro 1s ease-out forwards;
+            border: 5px solid white;
+            background: rgba(0,0,0,0.3);
         }
 
         .red-vs { border-color: #ff4d4d; }
         .blue-vs { border-color: #4da6ff; }
 
         .vs-text {
-            font-size: 4rem;
+            font-size: clamp(2.5rem, 8vw, 4rem);
             font-weight: 900;
             color: #fff;
             text-shadow: 0 0 25px red, 0 0 25px blue;
             animation: vsPulse 1.2s infinite ease-in-out alternate;
         }
 
-        @keyframes avatarIntro {
-            0% { transform: scale(0) rotate(-30deg); opacity: 0; }
-            80% { transform: scale(1.1) rotate(3deg); }
-            100% { transform: scale(1) rotate(0); opacity: 1; }
-        }
-
         @keyframes vsPulse {
-            0% { transform: scale(1); opacity: 0.7; }
-            100% { transform: scale(1.25); opacity: 1; }
-        }
-                #howto-popup {
-                    position: fixed;
-                    top: 0; 
-                    left: 0;
-                    width: 100%; 
-                    height: 100%;
-                    background: rgba(0,0,0,0.75);
-                    display: none;
-                    justify-content: center;
-                    align-items: center;
-                    z-index: 9999; /* paling atas */
-                }
-
-        #howto-popup .settings-content {
-            position: relative;
-            z-index: 10000; /* di atas overlay gelap */
+            0% { transform: scale(1); opacity: 0.8; }
+            100% { transform: scale(1.2); opacity: 1; }
         }
 
-
-
-        .start-box {
-            background: transparent;
-            animation: fadeIn .8s ease-out;
-        }
-
-        .start-image {
-            width: 500px;
-            animation: popUp 0.7s ease-out forwards;
-            user-select: none;
-        }
-        @keyframes popUp {
-            0% { transform: scale(0.2); opacity: 0; }
-            80% { transform: scale(1.1); opacity: 1; }
-            100% { transform: scale(1); }
-        }
-
-        /* Animasi masuk */
-        @keyframes fadeIn {
-            from { opacity: 0; transform: scale(.8); }
-            to { opacity: 1; transform: scale(1); }
-        }
-
-        .settings-content h2 {
-            font-size: 1.8rem;
-            margin-bottom: 10px;
-            font-weight: 800;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-
-            /* FIX START */
-            background: linear-gradient(135deg, #3b82f6, #60a5fa);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            color: transparent; 
-            display: inline-block; 
-            /* FIX END */
-        }
-        /* WINNER POPUP */
-        #winnerPopup {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            display: none;
-            justify-content: center;
-            align-items: center;
-            background: rgba(0,0,0,0.75);
-            backdrop-filter: blur(6px);
-            z-index: 9999;
-        }
-
-        .winner-box {
-            background: rgba(255,255,255,0.12);
-            border-radius: 25px;
-            padding: 35px 50px;
-            text-align: center;
-            color: #fff;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.7);
-            animation: popupShow .7s ease-out forwards;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center; /* 💯 CENTER */
-            gap: 15px;
-        }
-
-        .winner-avatar {
-            width: 150px;
-            height: 150px;
-            border-radius: 50%;
-            object-fit: contain; 
-            border: 6px solid #2ecc71;
-            animation: avatarGlow 1.2s infinite alternate ease-in-out;
-            display: block;
-            margin-left: auto;
-            margin-right: auto;
-        }
-
-        @keyframes avatarGlow {
-            0% { transform: scale(1); box-shadow: 0 0 10px #2ecc71; }
-            100% { transform: scale(1.08); box-shadow: 0 0 25px #2ecc71; }
-        }
-
-        /* Gaya untuk tombol jawaban */
+        /* Answer Buttons (Math Challenge) */
         .answer-btn {
-            padding: 15px 20px;
-            font-size: 1.1rem;
+            padding: 12px 16px;
+            font-size: 1rem;
             border-radius: 12px;
             border: none;
             cursor: pointer;
             text-align: left;
             background: #fff;
             color: #333;
-            transition: background 0.2s, transform 0.1s;
+            transition: all 0.2s;
             font-weight: 600;
             box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            width: 100%;
         }
 
         .answer-btn:hover {
@@ -715,179 +426,235 @@
             background: linear-gradient(90deg, #e74c3c, #c0392b);
             color: white;
         }
-        
+
+        /* Winner Popup Box */
+        .winner-box {
+            background: rgba(30, 41, 59, 0.95);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 25px;
+            padding: 30px;
+            text-align: center;
+            color: #fff;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.7);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+            max-width: 400px;
+            width: 90%;
+        }
+
+        .winner-avatar {
+            width: 130px;
+            height: 130px;
+            border-radius: 50%;
+            object-fit: contain;
+            border: 5px solid #2ecc71;
+            box-shadow: 0 0 20px #2ecc71;
+        }
+
         .winner-text {
-            font-size: 1.8rem;
+            font-size: 1.6rem;
             font-weight: 700;
-            margin-top: 15px;
+            margin: 5px 0;
         }
 
         .winner-btn {
-            margin-top: 18px;
-            padding: 10px 25px;
+            padding: 12px 30px;
             border-radius: 12px;
             border: none;
             background: linear-gradient(135deg, #2ecc71, #27ae60);
             color: white;
             font-size: 1rem;
+            font-weight: bold;
             cursor: pointer;
-            transition: .2s;
+            transition: transform 0.2s;
         }
 
         .winner-btn:hover {
-            transform: scale(1.06);
+            transform: scale(1.05);
         }
 
-        @keyframes popupShow {
-            from { opacity: 0; transform: scale(.7); }
-            to { opacity: 1; transform: scale(1); }
+        /* MEDIA QUERIES UNTUK TAMPILAN MOBILE & TABLET */
+        @media (max-width: 768px) {
+            body {
+                padding-top: 10px;
+            }
+
+            .game-container {
+                padding: 18px 12px;
+            }
+
+            .game-layout {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            /* Ubah susunan avatar saat mobile: Berdampingan di atas papan */
+            .avatar-zone-mobile {
+                display: flex;
+                flex-direction: row;
+                justify-content: space-around;
+                align-items: center;
+                width: 100%;
+                max-width: 450px;
+            }
+
+            .avatar-wrapper {
+                width: 45%;
+            }
+
+            .board-container {
+                max-width: 100%;
+            }
+
+            .board {
+                gap: 4px;
+                padding: 8px;
+            }
         }
-
-               
-
-    </style>
-  
-  <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
-  <script src="/_sdk/element_sdk.js" type="text/javascript"></script>
-  <script src="https://cdn.tailwindcss.com" type="text/javascript"></script>
+  </style>
  </head>
  <body>
 
+    <!-- VS Start Popup -->
     <div id="startPopup" class="start-popup">
         <div class="start-box">
             <div class="vs-container">
-                <img src="Aset/pemainmerah1.png" class="vs-avatar red-vs" id="vs-avatar-red"> 
+                <img src="Aset/pemainmerah1.png" class="vs-avatar red-vs" id="vs-avatar-red" alt="Pemain Merah"> 
                 <div class="vs-text">VS</div>
-                <img src="Aset/pemainbiru1.png" class="vs-avatar blue-vs" id="vs-avatar-blue">
+                <img src="Aset/pemainbiru1.png" class="vs-avatar blue-vs" id="vs-avatar-blue" alt="Pemain Biru">
             </div>
-            </div>
-    </div>
-</div>
-        
-    <div class="title-section">
-    <h1 id="game-title" class="game-title">Dam-Daman</h1>
-    <h1 id="game-title" class="game-title"></h1>
-    </div>
-
-    <div class="title-section"></div>
-
-    <div class="game-container">
-    <div class="game-info">
-    
-   </div>
-
-    <audio id="bg-music" src="Aset/backsound.mp3" loop></audio>
-    <audio id="hover-sound" src="Aset/sentuh.wav"></audio>
-    <audio id="click-sound" src="Aset/klik.wav"></audio>
-    <audio id="eat-sound" src="Aset/eat.wav"></audio>
-    <audio id="menu-hover-sound" src="Aset/hover.wav"></audio>
-    <audio id="menu-click-sound" src="Aset/click.wav"></audio>
-    <audio id="winSound" src="Aset/eat.wav" preload="auto"></audio>
-    <div class="board" id="gameBoard"></div>
-    
-</div>
-   
-<div id="mathChallengePopup" class="start-popup" style="display: none;">
-    <div class="settings-content" style="width: 500px; max-width: 95%; background: linear-gradient(135deg, #f5d020, #ffb300);">
-        <h2 style="color: #333; text-shadow: none;">Tantangan Matematika!</h2>
-        <div id="mathQuestion" style="font-size: 1.5rem; color: #333; font-weight: 600; margin: 20px 0;">[Soal Akan Muncul Di Sini]</div>
-        
-        <div id="timerDisplay" style="font-size: 2.5rem; font-weight: 900; color: #e74c3c; margin-bottom: 25px; border: 3px solid #e74c3c; border-radius: 15px; padding: 5px 15px; background: #fff;">10</div>
-
-        <div id="optionsContainer" style="display: flex; flex-direction: column; gap: 10px;">
-            <button class="answer-btn" data-answer="A">A. </button>
-            <button class="answer-btn" data-answer="B">B. </button>
-            <button class="answer-btn" data-answer="C">C. </button>
         </div>
-        <div id="challengeMessage" style="margin-top: 15px; font-weight: bold; color: #333;"></div>
-    </div>
-</div>
-
-<div class="avatar-zone">
-
-    <div class="avatar-wrapper" id="red-avatar-box">
-        <img src="Aset/pemainmerah1.png" class="avatar-img" id="avatar-red"> 
-        <div class="player-name red" id="redPlayerNameDisplay">Pemain Merah</div> 
-        <div class="player-score" id="redScore">10</div>
-    </div>
-    
-    <div class="avatar-wrapper" id="blue-avatar-box">
-        <img src="Aset/pemainbiru1.png" class="avatar-img" id="avatar-blue">
-        <div class="player-name blue" id="bluePlayerNameDisplay">Pemain Biru</div>
-        <div class="player-score" id="blueScore">10</div>
     </div>
 
-</div>
+    <!-- Title -->
+    <div class="title-section">
+        <h1 id="game-title" class="game-title">Dam-Daman</h1>
+    </div>
 
-    <div id="winnerPopup" class="winner-popup">
+    <!-- Game Container Utama -->
+    <div class="game-container">
+        
+        <!-- Audio Elements -->
+        <audio id="bg-music" src="Aset/backsound.mp3" loop></audio>
+        <audio id="hover-sound" src="Aset/sentuh.wav"></audio>
+        <audio id="click-sound" src="Aset/klik.wav"></audio>
+        <audio id="eat-sound" src="Aset/eat.wav"></audio>
+        <audio id="menu-hover-sound" src="Aset/hover.wav"></audio>
+        <audio id="menu-click-sound" src="Aset/click.wav"></audio>
+        <audio id="winSound" src="Aset/eat.wav" preload="auto"></audio>
+
+        <!-- Dynamic Game Layout: Kiri (Red) - Tengah (Board) - Kanan (Blue) -->
+        <div class="game-layout">
+            
+            <!-- Red Player Box -->
+            <div class="avatar-wrapper" id="red-avatar-box">
+                <img src="Aset/pemainmerah1.png" class="avatar-img" id="avatar-red" alt="Pemain Merah"> 
+                <div class="player-name red" id="redPlayerNameDisplay">Pemain Merah</div> 
+                <div class="player-score" id="redScore">10</div>
+            </div>
+
+            <!-- Board Box -->
+            <div class="board-container">
+                <div class="board" id="gameBoard"></div>
+            </div>
+
+            <!-- Blue Player Box -->
+            <div class="avatar-wrapper" id="blue-avatar-box">
+                <img src="Aset/pemainbiru1.png" class="avatar-img" id="avatar-blue" alt="Pemain Biru">
+                <div class="player-name blue" id="bluePlayerNameDisplay">Pemain Biru</div>
+                <div class="player-score" id="blueScore">10</div>
+            </div>
+
+        </div>
+    </div>
+   
+    <!-- Math Challenge Popup -->
+    <div id="mathChallengePopup" class="start-popup">
+        <div class="settings-content" style="background: linear-gradient(135deg, #f5d020, #ffb300);">
+            <h2 style="color: #333; text-shadow: none; font-weight: 800; font-size: 1.5rem; margin-bottom: 10px;">Tantangan Matematika!</h2>
+            <div id="mathQuestion" style="font-size: 1.2rem; color: #333; font-weight: 600; margin: 15px 0;">[Soal Akan Muncul Di Sini]</div>
+            
+            <div id="timerDisplay" style="font-size: 2rem; font-weight: 900; color: #e74c3c; margin: 10px auto 15px auto; border: 3px solid #e74c3c; border-radius: 15px; padding: 2px 15px; background: #fff; display: inline-block;">10</div>
+
+            <div id="optionsContainer" style="display: flex; flex-direction: column; gap: 10px;">
+                <button class="answer-btn" data-answer="A">A. </button>
+                <button class="answer-btn" data-answer="B">B. </button>
+                <button class="answer-btn" data-answer="C">C. </button>
+            </div>
+            <div id="challengeMessage" style="margin-top: 15px; font-weight: bold; color: #333;"></div>
+        </div>
+    </div>
+
+    <!-- Winner Popup -->
+    <div id="winnerPopup">
         <div class="winner-box">
-            <img id="winnerAvatar" class="winner-avatar" src="" alt="Winner">
+            <img id="winnerAvatar" class="winner-avatar" src="Aset/pemainmerah1.png" alt="Winner">
             <h2 id="winnerText" class="winner-text"></h2>
             <button id="winnerCloseBtn" class="winner-btn">Main Lagi</button>
         </div>
     </div>
 
-   <button id="settings-button" class="floating-settings">⚙️</button>
+    <!-- Floating Settings Button -->
+    <button id="settings-button" class="floating-settings" aria-label="Settings">⚙️</button>
 
+    <!-- Settings Popup -->
     <div id="settings-popup" class="settings-popup">
-    <div class="settings-content">
-        
-        <span id="close-settings" class="close-popup">×</span>
-        
-        <div class="sound-settings">
-            <label id="music-volume-label">Volume Musik</label>
-            <input type="range" id="music-slider" min="0" max="100" value="50">
-            <label id="sfx-volume-label">Volume SFX</label>
-            <input type="range" id="sfx-slider" min="0" max="100" value="50">
+        <div class="settings-content">
+            <span id="close-settings" class="close-popup">×</span>
+            <h2 style="font-size: 1.5rem; font-weight: bold; margin-bottom: 15px;">PENGATURAN</h2>
+            
+            <div class="sound-settings">
+                <label id="music-volume-label">Volume Musik</label>
+                <input type="range" id="music-slider" min="0" max="100" value="50">
+                <label id="sfx-volume-label">Volume SFX</label>
+                <input type="range" id="sfx-slider" min="0" max="100" value="50">
+            </div>
+            
+            <div class="language-setting">
+                <label id="language-label">Pilih Bahasa</label>
+                <select id="language-selector">
+                    <option value="id">Bahasa Indonesia</option>
+                    <option value="en">English</option>
+                </select>
+            </div>
+
+            <button id="continue-btn" class="settings-btn">Lanjutkan</button>
+            <button id="popup-reset-btn" class="settings-btn">Reset Game</button>
+            <button id="howto-btn" class="settings-btn">Cara Bermain</button>
+            <button id="back-home-btn" class="settings-btn">Kembali ke Home</button>
         </div>
-        
-        <div class="language-setting">
-            <label id="language-label">Pilih Bahasa</label>
-            <select id="language-selector">
-                <option value="id">Bahasa Indonesia</option>
-                <option value="en">English</option>
-            </select>
-        </div>
-
-
-        <button id="continue-btn" class="settings-btn">Lanjutkan</button>
-        <button id="popup-reset-btn" class="settings-btn">Reset Game</button>
-        <button id="howto-btn" class="settings-btn">Cara Bermain</button>
-        <button id="back-home-btn" class="settings-btn">Kembali ke Home</button>
-    </div>
     </div>
 
+    <!-- How to Play Popup -->
     <div id="howto-popup" class="settings-popup">
-    <div class="settings-content">
+        <div class="settings-content">
+            <span id="close-howto" class="close-popup">×</span>
+            <h2 style="font-size: 1.5rem; font-weight: bold; margin-bottom: 15px;">Cara Bermain</h2>
 
-        <span id="close-howto" class="close-popup">×</span>
-        <h2>How to Play</h2>
+            <p style="text-align: left; line-height: 1.6; font-size: 0.95rem;">
+                • Gerakkan pion ke depan, belakang, kiri, kanan, atau diagonal.<br>
+                • Lompat pion lawan untuk memakannya.<br>
+                • Pion lawan yang dilompati akan hilang.<br>
+                • Pemain menang jika lawan tidak bisa bergerak atau pionnya habis.<br>
+            </p>
 
-        <p>
-            • Gerakkan pion ke depan, belakang, kiri, kanan, atau diagonal.<br>
-            • Lompat pion lawan untuk memakannya.<br>
-            • Pion lawan yang dilompati akan hilang.<br>
-            • Pemain menang jika lawan tidak bisa bergerak atau pionnya habis.<br>
-        </p>
-
-        <button id="close-howto" class="popup-button">Close</button>
+            <button id="close-howto-btn" class="settings-btn" style="margin-top: 20px;">Tutup</button>
+        </div>
     </div>
-    </div>
-
 
   <script>
-
         let redAvatarUrl = "Aset/pemainmerah1.png";
         let blueAvatarUrl = "Aset/pemainbiru1.png";
 
-        // BARU: Fungsi untuk mendapatkan parameter dari URL
         function getUrlParameter(name) {
             name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
             var regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
             var results = regex.exec(location.search);
             return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
         }
-        // Data Soal Matematika Kelas 5 SD (Contoh)
+
         const mathQuestions = [
             {
                 question: "Berapa hasil dari 125 + 75?",
@@ -915,7 +682,7 @@
                 answer: "A"
             }
         ];
-        // Objek terjemahan
+
         const translations = {
             'id': {
                 'turnLabel': 'Giliran',
@@ -931,7 +698,7 @@
                 'languageLabel': 'Bahasa',
                 'redPlayer': 'Pemain Merah',
                 'bluePlayer': 'Pemain Biru',
-                'aiPlayer': 'AI (Komputer)', // <--- BARU: Nama Pemain AI
+                'aiPlayer': 'AI (Komputer)',
                 'tieMessage': 'Tidak ada langkah valid. Seri!',
                 'loserMsg': 'Kalah!'
             },
@@ -948,98 +715,57 @@
                 'popupResetBtn': 'Reset Game',
                 'howtoBtn': 'How to Play',
                 'backHomeBtn': 'Back to Home',
-                'alertHowTo': "How to Play:\n- Move pieces in any direction (forward, backward, side, diagonal)\n- Jump opponent's pieces (2 steps) to capture them\n- Win if the opponent cannot move or all opponent's pieces are captured",
                 'winnerMsg': 'Wins!'
             }
         };
-        // --- DETEKSI MODE GAME (single / multi) ---
 
         const urlParams = new URLSearchParams(window.location.search);
-        
-        // --- PERBAIKAN 1: Pisahkan Variabel Aturan & Lawan ---
-        
-        // 1. gameMode: Menentukan aturan main (Math Challenge atau Classic)
-        // Ambil dari URL, default ke 'classic' jika tidak ada
         let gameMode = urlParams.get("mode") || "classic"; 
-
-        // 2. playerType: Menentukan lawan (Single Player vs AI atau Multiplayer)
-        // Ambil dari URL (misal &type=single), default ke 'multi'
         let playerType = urlParams.get("type") || "multi"; 
 
-        console.log("Aturan Main:", gameMode);
-        console.log("Tipe Lawan:", playerType);
-
         let currentLang = 'id';
-        
-        // Inisialisasi variabel game      
         let board = [];
-        let currentPlayer = 'red'; // Giliran saat ini ('red' atau 'blue')
+        let currentPlayer = 'red';
         let selectedPiece = null;
         let validMoves = [];
 
-        // Variabel untuk Tantangan Matematika
         let currentQuestion = null;
         let timerInterval = null;
         let timeLeft = 10;
         let isChallengeActive = false; 
-        
-        // let originalHandleCellClick = null; // <-- HAPUS INI (Tidak perlu jika logika pakai if/else di handleCellClick)
-        
         let pendingSelection = null;
-        
-        // --- PERBAIKAN 2: Hapus deklarasi ganda ---
-        // let gameMode = 'classic'; // <--- HAPUS BARIS INI (Error penyebab crash)
 
-        // Variabel Tambahan untuk AI
-        let isAITurn = false; // Penanda apakah sedang giliran AI
-
-        //fungsi gerakan random
         function AIplay() {
-        let possibleMoves = [];
+            let possibleMoves = [];
 
-        // cek semua pion biru & langkah validnya
-        for (let r = 0; r < 5; r++) {
-            for (let c = 0; c < 5; c++) {
-                if (board[r][c] === 'blue') {
-                    let moves = detectMoreCapture(r,c); // prioritas makan dulu
-                    if (moves.length > 0) {
-                        possibleMoves.push({from:{r,c}, to: moves});
-                    } else {
-                        // gerakan biasa
-                        for (let dr = -1; dr <= 1; dr++) {
-                            for (let dc = -1; dc <= 1; dc++) {
-                                let nr = r+dr, nc = c+dc;
-                                if(nr>=0 && nr<5 && nc>=0 && nc<5 && board[nr][nc]===null){
-                                    possibleMoves.push({from:{r,c}, to:[{row:nr,col:nc}]});
-                                }
-                            }
+            for (let r = 0; r < 5; r++) {
+                for (let c = 0; c < 5; c++) {
+                    if (board[r][c] === 'blue') {
+                        let moves = findValidMovesForPiece(r, c);
+                        let captures = moves.filter(m => m.isCapture);
+                        if (captures.length > 0) {
+                            captures.forEach(m => possibleMoves.push({from:{r,c}, to: m}));
+                        } else {
+                            moves.forEach(m => possibleMoves.push({from:{r,c}, to: m}));
                         }
                     }
                 }
             }
+
+            if (possibleMoves.length === 0) {
+                showWinner(translations[currentLang].redPlayer);
+                return;
+            }
+
+            const chosen = possibleMoves[Math.floor(Math.random()*possibleMoves.length)];
+            makeMove(chosen.from.r, chosen.from.c, chosen.to.toRow, chosen.to.toCol);
         }
 
-    // jika AI tidak punya langkah, pemain merah menang
-    if (possibleMoves.length === 0) {
-        showWinner(translations[currentLang].redPlayer);
-        return;
-    }
-
-    // pilih langkah random
-    const chosen = possibleMoves[Math.floor(Math.random()*possibleMoves.length)];
-    const moveTo = chosen.to[Math.floor(Math.random()*chosen.to.length)];
-
-    makeMove(chosen.from.r, chosen.from.c, moveTo.row, moveTo.col);
-}
-
-        
-        // Inisialisasi papan 5x5
         function initBoard() {
             board = [];
             for (let row = 0; row < 5; row++) {
                 board[row] = [];
                 for (let col = 0; col < 5; col++) {
-                    // Baris 0-1: pion biru, baris 3-4: pion merah, baris 2: kosong
                     if (row <= 1) {
                         board[row][col] = 'blue';
                     } else if (row >= 3) {
@@ -1051,7 +777,6 @@
             }
         }
 
-        // Render papan ke HTML
         function renderBoard() {
             const gameBoard = document.getElementById('gameBoard');
             gameBoard.innerHTML = '';
@@ -1063,10 +788,8 @@
                     cell.dataset.row = row;
                     cell.dataset.col = col;
                     
-                    // Tambahkan event listener untuk klik
                     cell.addEventListener('click', () => handleCellClick(row, col));
 
-                    // Jika ada pion di posisi ini
                     if (board[row][col]) {
                         const piece = document.createElement('div');
                         piece.className = `piece ${board[row][col]}`;
@@ -1079,33 +802,24 @@
             attachPieceSounds();
         }
 
-        // FUNGSI LOGIKA VALIDASI GERAKAN (WAJIB ADA)
         function isValidMove(r1, c1, r2, c2) {
-            // 1. Pastikan koordinat tujuan ada di dalam papan 5x5
             if (r2 < 0 || r2 >= 5 || c2 < 0 || c2 >= 5) return false;
-
-            // 2. Tujuan harus kosong (tidak bisa menumpuk pion)
             if (board[r2][c2] !== null) return false;
 
-            const dR = r2 - r1; // Selisih Baris
-            const dC = c2 - c1; // Selisih Kolom
+            const dR = r2 - r1;
+            const dC = c2 - c1;
             const absR = Math.abs(dR);
             const absC = Math.abs(dC);
 
-            // 3. Aturan Gerak Biasa (Geser 1 Langkah)
-            // Boleh vertikal, horizontal, atau diagonal sejauh 1 kotak
             if (absR <= 1 && absC <= 1 && (absR + absC > 0)) {
                 return true; 
             }
 
-            // 4. Aturan Makan (Lompat 2 Langkah)
-            // Syarat: Jarak 2 kotak, dan di tengah-tengah harus ada musuh
             if ((absR === 2 && absC === 0) || (absR === 0 && absC === 2) || (absR === 2 && absC === 2)) {
                 const midR = (r1 + r2) / 2;
                 const midC = (c1 + c2) / 2;
                 const midPiece = board[midR][midC];
 
-                // Cek apakah ada pion di tengah dan warnanya beda dengan pemain saat ini
                 if (midPiece !== null && midPiece !== currentPlayer) {
                     return true;
                 }
@@ -1114,75 +828,48 @@
             return false;
         }
 
-        // FUNGSI handleCellClick 
         function handleCellClick(row, col) {
-    // 0. JIKA TANTANGAN AKTIF, STOP INTERAKSI
-    if (isChallengeActive) return;
+            if (isChallengeActive) return;
 
-    // === PERBAIKAN BARU: BLOKIR KLIK SAAT GILIRAN AI ===
-    // Jika mode Single Player DAN giliran Biru (Komputer), 
-    // pemain tidak boleh mengklik papan.
-    if (playerType === 'single' && currentPlayer === 'blue') {
-        return; 
-    }
+            if (playerType === 'single' && currentPlayer === 'blue') {
+                return; 
+            }
 
-    const cell = document.querySelector(`[data-row="${row}"][data-col="${col}"]`);
-    
-    // 1. GERAKAN PION (Move)
-    // Cek isValidMove dulu sebelum dijalankan
-    if (selectedPiece && isValidMove(selectedPiece.row, selectedPiece.col, row, col)) {
-        makeMove(selectedPiece.row, selectedPiece.col, row, col);
-        clearSelection();
-        updateScore();
-        return;
-    }
+            if (selectedPiece && isValidMove(selectedPiece.row, selectedPiece.col, row, col)) {
+                makeMove(selectedPiece.row, selectedPiece.col, row, col);
+                clearSelection();
+                updateScore();
+                return;
+            }
 
-    // 2. PEMILIHAN PION (Select)
-    if (board[row][col] === currentPlayer) {
-        
-        // Jika belum ada pion terpilih, cek mode permainan
-        if (!selectedPiece) {
-            // Jika Mode Tantangan Matematika
-            if (gameMode === 'challenge') {
-                pendingSelection = { row, col };
-                startMathChallenge(); 
-                return; // Stop, tunggu jawaban soal
-            } 
-        }
-        
-        // Logika seleksi (Mode Klasik atau setelah jawab benar)
-        clearSelection();
-        selectedPiece = { row, col };
-        
-        // Visual Seleksi
-        const newSelectedCell = document.querySelector(`[data-row="${row}"][data-col="${col}"]`);
-        if(newSelectedCell) newSelectedCell.classList.add('selected');
-        
-        // Tampilkan Jalur Hijau
-        showValidMoves(row, col);
-        
-    } else {
-        // Klik tempat kosong sembarang -> Batal pilih
-        clearSelection();
-    }
-    }
-// BARU: Tampilkan Pop-up Tantangan
-        function startMathChallenge() {
-            // Nonaktifkan klik di papan saat tantangan aktif
-           
-            document.querySelectorAll('.cell').forEach(cell => {
+            if (board[row][col] === currentPlayer) {
+                if (!selectedPiece) {
+                    if (gameMode === 'challenge') {
+                        pendingSelection = { row, col };
+                        startMathChallenge(); 
+                        return;
+                    } 
+                }
                 
-                cell.classList.add('challenge-active'); // Tambahkan kelas untuk visual
-            });
+                clearSelection();
+                selectedPiece = { row, col };
+                
+                const newSelectedCell = document.querySelector(`[data-row="${row}"][data-col="${col}"]`);
+                if(newSelectedCell) newSelectedCell.classList.add('selected');
+                
+                showValidMoves(row, col);
+            } else {
+                clearSelection();
+            }
+        }
 
+        function startMathChallenge() {
             isChallengeActive = true;
             timeLeft = 10;
             
-            // 1. Pilih soal acak
             const randomIndex = Math.floor(Math.random() * mathQuestions.length);
             currentQuestion = mathQuestions[randomIndex];
 
-            // 2. Tampilkan pop-up
             const popup = document.getElementById('mathChallengePopup');
             const qDiv = document.getElementById('mathQuestion');
             const optionsContainer = document.getElementById('optionsContainer');
@@ -1201,7 +888,6 @@
             popup.style.display = 'flex';
             timerDisplay.textContent = timeLeft;
 
-            // 3. Mulai Timer
             timerInterval = setInterval(() => {
                 timeLeft--;
                 timerDisplay.textContent = timeLeft;
@@ -1213,28 +899,17 @@
             }, 1000);
         }
 
-        // BARU: Akhiri Tantangan
-        // MODIFIKASI FUNGSI endChallenge
         function endChallenge(isCorrect, message) {
             clearInterval(timerInterval);
             document.getElementById('challengeMessage').textContent = message;
             
-            // Nonaktifkan semua tombol
             document.querySelectorAll('.answer-btn').forEach(btn => btn.disabled = true);
             
             setTimeout(() => {
-                // Sembunyikan pop-up
                 document.getElementById('mathChallengePopup').style.display = 'none';
-                isChallengeActive = false; // Aktifkan kembali klik di papan
-
-                // Hapus kelas visual
-                document.querySelectorAll('.cell').forEach(cell => {
-                    cell.classList.remove('challenge-active');
-                });
+                isChallengeActive = false;
 
                 if (isCorrect) {
-                    // === LOGIKA KUNCI PERBAIKAN BUG ===
-                    // BENAR: SELEKSI PION YANG TERTUNDA DILAKUKAN DI SINI
                     if (pendingSelection) {
                         const { row, col } = pendingSelection;
                         selectedPiece = { row, col };
@@ -1243,22 +918,17 @@
                         if (cell) {
                             cell.classList.add('selected');
                             showValidMoves(row, col);
-                            // Setelah ini, pemain bisa klik kotak kosong untuk bergerak.
                         }
                     }
                 } else {
-                    // SALAH: Langsung pindah giliran
                     switchPlayer();
                     clearSelection();
                 }
                 
-                // Pastikan pendingSelection direset setelah digunakan
                 pendingSelection = null; 
-
-            }, 1500); // Tunda sebentar agar pemain bisa melihat pesan
+            }, 1500);
         }
 
-        // BARU: Cek Jawaban
         function checkAnswer(selectedAnswer) {
             clearInterval(timerInterval);
             const isCorrect = selectedAnswer === currentQuestion.answer;
@@ -1267,24 +937,21 @@
 
             if (isCorrect) {
                 messageDiv.textContent = "Jawaban Benar! Silakan bergerak.";
-                btn.classList.add('correct');
+                if(btn) btn.classList.add('correct');
             } else {
                 messageDiv.textContent = "Jawaban Salah! Giliran pindah.";
-                btn.classList.add('wrong');
+                if(btn) btn.classList.add('wrong');
             }
 
-            // Highlight jawaban benar
-            document.querySelector(`.answer-btn[data-answer="${currentQuestion.answer}"]`).classList.add('correct');
+            const correctBtn = document.querySelector(`.answer-btn[data-answer="${currentQuestion.answer}"]`);
+            if (correctBtn) correctBtn.classList.add('correct');
 
-            // Akhiri tantangan setelah pengecekan
             endChallenge(isCorrect, messageDiv.textContent);
         }
 
-        // Tampilkan langkah valid
         function showValidMoves(row, col) {
             validMoves = [];
             
-            // Cek semua posisi diagonal dalam radius 2
             for (let deltaRow = -2; deltaRow <= 2; deltaRow++) {
                 for (let deltaCol = -2; deltaCol <= 2; deltaCol++) {
                     if (deltaRow === 0 && deltaCol === 0) continue;
@@ -1292,35 +959,30 @@
                     const newRow = row + deltaRow;
                     const newCol = col + deltaCol;
                     
-                    // Pastikan dalam batas papan
                     if (newRow >= 0 && newRow < 5 && newCol >= 0 && newCol < 5) {
                         if (isValidMove(row, col, newRow, newCol)) {
                             validMoves.push({ row: newRow, col: newCol });
                             const cell = document.querySelector(`[data-row="${newRow}"][data-col="${newCol}"]`);
-                            cell.classList.add('valid-move');
+                            if (cell) cell.classList.add('valid-move');
                         }
                     }
                 }
             }
         }
 
-        // BARU: Fungsi Pembantu untuk cek apakah langkah adalah tangkapan
         function isCaptureMove(fromRow, fromCol, toRow, toCol) {
             const rowDiff = Math.abs(fromRow - toRow);
             const colDiff = Math.abs(fromCol - toCol);
             
-            // Cek apakah itu langkah lompatan 2 petak (vertikal, horizontal, atau diagonal)
             if (rowDiff === 2 || colDiff === 2) { 
                 const midRow = (fromRow + toRow) / 2;
                 const midCol = (fromCol + toCol) / 2;
                 const middlePiece = board[midRow][midCol];
-                // Pastikan ada bidak di tengah, dan itu bidak lawan
                 return middlePiece && middlePiece !== board[fromRow][fromCol];
             }
             return false;
         }
 
-        // BARU: Fungsi untuk mencari semua langkah yang valid dari sebuah bidak
         function findValidMovesForPiece(row, col) {
             const moves = [];
             for (let deltaRow = -2; deltaRow <= 2; deltaRow++) {
@@ -1329,14 +991,13 @@
                     const newRow = row + deltaRow;
                     const newCol = col + deltaCol;
                     if (newRow >= 0 && newRow < 5 && newCol >= 0 && newCol < 5) {
-                        // Gunakan isValidMove yang sudah ada
                         if (isValidMove(row, col, newRow, newCol)) {
                             moves.push({ 
                                 fromRow: row, 
                                 fromCol: col, 
                                 toRow: newRow, 
                                 toCol: newCol, 
-                                isCapture: isCaptureMove(row, col, newRow, newCol) // Cek apakah ini tangkapan
+                                isCapture: isCaptureMove(row, col, newRow, newCol)
                             });
                         }
                     }
@@ -1345,7 +1006,6 @@
             return moves;
         }
 
-        // BARU: Fungsi untuk mencari semua langkah yang valid untuk pemain saat ini
         function findAllValidMoves(player) {
             let allMoves = [];
             for (let row = 0; row < 5; row++) {
@@ -1358,13 +1018,8 @@
             return allMoves;
         }
 
-        // BARU: Fungsi AI (Pemain Biru)
-        // BARU: Fungsi AI (Pemain Biru)
         function makeAIMove() {
-            // PERBAIKAN: Gunakan 'playerType', BUKAN 'gameMode'
-            // Karena gameMode isinya sekarang 'classic' atau 'challenge'
             if (playerType === 'single' && currentPlayer === 'blue') {
-                
                 const allValidMoves = findAllValidMoves('blue');
                 
                 if (allValidMoves.length > 0) {
@@ -1377,53 +1032,16 @@
                         move = allValidMoves[Math.floor(Math.random() * allValidMoves.length)];
                     }
 
-                    // Tambahkan jeda sedikit agar terlihat natural
                     setTimeout(() => {
                         makeMove(move.fromRow, move.fromCol, move.toRow, move.toCol);
                         clearSelection();
                         updateScore();
-                    }, 500); // Delay 0.5 detik
-                    
-                } else {
-                    // AI kalah
+                    }, 500);
                 }
             }
         }
-        // FUNGSI BARU UNTUK MENUTUP POPUP AWAL
-        function startGameFlow() {
-            // Asumsi ID pop-up awal adalah 'vsPopup'
-            const vsPopup = document.getElementById('vsPopup');
-            if (vsPopup) {
-                vsPopup.style.display = 'none';
-            }
-        }
 
-        // ... (tempatkan fungsi lain di sini, seperti initBoard, renderBoard, dll.) ...
-
-        // Modifikasi DOMContentLoaded
-        document.addEventListener('DOMContentLoaded', function() {
-            updatePlayerInfo(); 
-            initBoard();
-            renderBoard();
-            updateLanguage('id');
-            updateScore();
-            updateAvatarTurn(); 
-            
-            // PENTING: Panggil startGameFlow() jika Anda ingin game dimulai otomatis 
-            // setelah VS Screen ditampilkan beberapa saat.
-            // Jika Anda menggunakan tombol "Mulai" di dalam pop-up, HAPUS BARIS ini.
-            // Contoh untuk memulai otomatis setelah 3 detik:
-            setTimeout(startGameFlow, 3000); 
-
-            // BARU: Event Listeners untuk tombol jawaban
-            document.querySelectorAll('.answer-btn').forEach(btn => {
-                    btn.addEventListener('click', function() {
-                        const answer = this.getAttribute('data-answer');
-                        // ... (lanjutan logika checkAnswer Anda) ...
-                    });
-            });
-        });
-        // --- PENGATURAN DAN SOUND ---
+        // Sound Settings & Controls
         const settingsBtn = document.getElementById("settings-button");
         const settingsPopup = document.getElementById("settings-popup");
         const closeSettings = document.getElementById("close-settings");
@@ -1438,11 +1056,12 @@
         const hoverSound = document.getElementById("hover-sound");
         const clickSound = document.getElementById("click-sound");
         const eatSound = document.getElementById("eat-sound");
+        const menuHoverSound = document.getElementById("menu-hover-sound");
+        const menuClickSound = document.getElementById("menu-click-sound");
 
         const musicSlider = document.getElementById("music-slider");
         const sfxSlider = document.getElementById("sfx-slider");
 
-        // Atur volume awal
         bgMusic.volume = musicSlider.value / 100;
         hoverSound.volume = sfxSlider.value / 100;
         clickSound.volume = sfxSlider.value / 100;
@@ -1452,7 +1071,6 @@
             bgMusic.play().catch(e => console.log("Autoplay diblokir"));
         }, { once: true });
 
-        // Slider
         musicSlider.addEventListener("input", () => {
             bgMusic.volume = musicSlider.value / 100;
         });
@@ -1465,86 +1083,73 @@
             menuClickSound.volume = vol;
         });
 
-        // Sound saat pion disentuh atau diklik
         function attachPieceSounds() {
-        document.querySelectorAll(".piece").forEach(piece => {
-        piece.addEventListener("mouseenter", () => {
-            hoverSound.currentTime = 0;
-            hoverSound.play();
-        });
-        piece.addEventListener("click", () => {
-            clickSound.currentTime = 0;
-            clickSound.play();
-        });
-        });
+            document.querySelectorAll(".piece").forEach(piece => {
+                piece.addEventListener("mouseenter", () => {
+                    hoverSound.currentTime = 0;
+                    hoverSound.play();
+                });
+                piece.addEventListener("click", () => {
+                    clickSound.currentTime = 0;
+                    clickSound.play();
+                });
+            });
         }
-        //soudn saat pion makan
+
         function makeMove(fromRow, fromCol, toRow, toCol) {
-        const rowDiff = Math.abs(toRow - fromRow);
-        const colDiff = Math.abs(toCol - fromCol);
+            const rowDiff = Math.abs(toRow - fromRow);
+            const colDiff = Math.abs(toCol - fromCol);
 
-        let pieceEaten = false;
+            let pieceEaten = false;
 
-        if (rowDiff === 2 || colDiff === 2) {
-        const midRow = (fromRow + toRow) / 2;
-        const midCol = (fromCol + toCol) / 2;
+            if (rowDiff === 2 || colDiff === 2) {
+                const midRow = (fromRow + toRow) / 2;
+                const midCol = (fromCol + toCol) / 2;
 
-        if (board[midRow][midCol] !== null && board[midRow][midCol] !== currentPlayer) {
-            eatSound.currentTime = 0;
-            eatSound.play();
-            pieceEaten = true;
-            board[midRow][midCol] = null;
-        }
-        }
+                if (board[midRow][midCol] !== null && board[midRow][midCol] !== currentPlayer) {
+                    eatSound.currentTime = 0;
+                    eatSound.play();
+                    pieceEaten = true;
+                    board[midRow][midCol] = null;
+                }
+            }
 
-        if (!pieceEaten) {
-        clickSound.currentTime = 0;
-        clickSound.play();
-        }
+            if (!pieceEaten) {
+                clickSound.currentTime = 0;
+                clickSound.play();
+            }
 
             board[toRow][toCol] = board[fromRow][fromCol];
             board[fromRow][fromCol] = null;
 
             renderBoard();
             updateScore();
-            switchPlayer();   // penting!
+            switchPlayer();
         }
 
-
-        // Ambil elemen audio untuk menu setting
-        const menuHoverSound = document.getElementById("menu-hover-sound");
-        const menuClickSound = document.getElementById("menu-click-sound");
-
-        // Target tombol menu (bisa ditambah jika ada tombol baru)
         const menuButtons = document.querySelectorAll(
-            "#settings-button, #continue-btn, #popup-reset-btn, #howto-btn, #back-home-btn, #winnerCloseBtn" // FIX: Tambahkan tombol pemenang
+            "#settings-button, #continue-btn, #popup-reset-btn, #howto-btn, #back-home-btn, #winnerCloseBtn, #close-howto-btn"
         );
 
-        // Tambahkan event
         menuButtons.forEach(btn => {
-            // Suara hover
-            btn.addEventListener("mouseenter", () => {
-                menuHoverSound.currentTime = 0;
-                menuHoverSound.play();
-            });
+            if(btn) {
+                btn.addEventListener("mouseenter", () => {
+                    menuHoverSound.currentTime = 0;
+                    menuHoverSound.play();
+                });
 
-            // Suara klik
-            btn.addEventListener("click", () => {
-                menuClickSound.currentTime = 0;
-                menuClickSound.play();
-            });
+                btn.addEventListener("click", () => {
+                    menuClickSound.currentTime = 0;
+                    menuClickSound.play();
+                });
+            }
         });
 
-        // BARU: Fungsi untuk mengaktifkan/menonaktifkan glow avatar (Perbaikan Masalah Glow)
         function updateAvatarTurn() {
             const redBox = document.getElementById('red-avatar-box');
             const blueBox = document.getElementById('blue-avatar-box');
 
-            // Cek keberadaan elemen
-            if (!redBox || !blueBox) {
-                console.warn("Avatar boxes not found (red-avatar-box / blue-avatar-box). Glow effect skipped.");
-                return; 
-            }
+            if (!redBox || !blueBox) return; 
 
             if (currentPlayer === 'red') {
                 redBox.classList.add('active-turn');
@@ -1554,28 +1159,26 @@
                 blueBox.classList.add('active-turn');
             }
         }
-        ////gambar are you
+
         const startPopup = document.getElementById("startPopup");
         const introSound = new Audio("Aset/intro.mp3");
         introSound.volume = 0.8;
 
-        // Tampilkan popup + mainkan sound ketika halaman tampil
         window.onload = () => {
-            startPopup.style.display = "flex";
-            introSound.currentTime = 0;
-            introSound.play().catch(e => console.log("Blocked:", e));
+            if(startPopup) {
+                startPopup.style.display = "flex";
+                introSound.currentTime = 0;
+                introSound.play().catch(e => console.log("Blocked:", e));
+            }
         };
 
-        // Tutup popup dengan klik  atau otomatis setelah 4 detik
-        startPopup.addEventListener("click", closeVS);
-
-        setTimeout(() => {
-            closeVS();
-            // renderBoard(); // HAPUS: Dipindahkan ke closeVS()
-        }, 4000);
+        if(startPopup) {
+            startPopup.addEventListener("click", closeVS);
+            setTimeout(closeVS, 4000);
+        }
 
         function closeVS() {
-            startPopup.style.display = "none";
+            if(startPopup) startPopup.style.display = "none";
             introSound.pause();
             introSound.currentTime = 0;
 
@@ -1583,63 +1186,49 @@
                 bgMusic.play().catch(e => console.log("Music blocked"));
             }, 300);
 
-            // FIX: Panggil renderBoard() di sini agar papan muncul saat di-klik
             renderBoard(); 
             updateAvatarTurn(); 
         }
 
-
-        // Buka popup
         settingsBtn.addEventListener("click", () => {
             settingsPopup.style.display = "flex";
         });
 
-        // Reset game dari popup
         popupResetBtn.addEventListener("click", () => {
-        resetGame();
-        settingsPopup.style.display = "none";
+            resetGame();
+            settingsPopup.style.display = "none";
         });
         
-        // Tombol kembali ke home
         backHomeBtn.addEventListener("click", () => {
-        window.location.href = "index.html";
+            window.location.href = "index.html";
         });
 
-        // Tutup popup
         closeSettings.addEventListener("click", () => settingsPopup.style.display = "none");
         continueBtn.addEventListener("click", () => settingsPopup.style.display = "none");
 
-        
-        // How to Play
+        const howtoPopup = document.getElementById("howto-popup");
+        const closeHowto = document.getElementById("close-howto");
+        const closeHowtoBtn = document.getElementById("close-howto-btn");
+
         howtoBtn.addEventListener("click", () => {
             howtoPopup.style.display = "flex";
         });
 
-        const howtoPopup = document.getElementById("howto-popup");
-        const closeHowto = document.getElementById("close-howto");
-
-        closeHowto.addEventListener("click", () => {
-            howtoPopup.style.display = "none";
-        });
+        if(closeHowto) closeHowto.addEventListener("click", () => howtoPopup.style.display = "none");
+        if(closeHowtoBtn) closeHowtoBtn.addEventListener("click", () => howtoPopup.style.display = "none");
 
         howtoPopup.addEventListener("click", (e) => {
             if (e.target === howtoPopup) howtoPopup.style.display = "none";
         });
 
-
-        // Klik luar popup untuk menutup
         settingsPopup.addEventListener("click", (e) => {
             if (e.target === settingsPopup) settingsPopup.style.display = "none";
         });
 
-
-        // --- LOGIKA MULTILANGUAGE ---
         function updateLanguage(lang) {
             currentLang = lang;
             const t = translations[lang];
 
-                       
-            // Update teks Popup
             document.getElementById('music-volume-label').textContent = t.musicVolumeLabel;
             document.getElementById('sfx-volume-label').textContent = t.sfxVolumeLabel;
             document.getElementById('language-label').textContent = t.languageLabel;
@@ -1647,59 +1236,45 @@
             document.getElementById('popup-reset-btn').textContent = t.popupResetBtn;
             document.getElementById('howto-btn').textContent = t.howtoBtn;
             document.getElementById('back-home-btn').textContent = t.backHomeBtn;
-            
-            // Update giliran (karena teksnya dinamis)
-            const currentPlayerName = currentPlayer === 'red' ? t.redPlayer : t.bluePlayer;
-            // Cek apakah elemen ada sebelum diakses
-            const playerDisplayName = document.getElementById('current-player-name');
-            if (playerDisplayName) {
-                playerDisplayName.textContent = currentPlayerName;
-            }
         }
 
         languageSelector.addEventListener('change', (e) => {
             updateLanguage(e.target.value);
         });
 
-        // Hapus seleksi dan highlight
         function clearSelection() {
             selectedPiece = null;
             validMoves = [];
             
-            // Hapus semua class selected dan valid-move
             document.querySelectorAll('.cell').forEach(cell => {
                 cell.classList.remove('selected', 'valid-move');
             });
         }
 
-        // Ganti pemain
         function switchPlayer() {
-        currentPlayer = currentPlayer === 'red' ? 'blue' : 'red';
-        updateAvatarTurn();
+            currentPlayer = currentPlayer === 'red' ? 'blue' : 'red';
+            updateAvatarTurn();
 
-        // JIKA SINGLE PLAYER & GILIRAN BIRU -> JALANKAN AI
-        if (playerType === "single" && currentPlayer === "blue") {
-            // Beri jeda 1 detik agar terlihat natural
-            setTimeout(() => {
-                makeAIMove(); 
-            }, 1000);
-        }
+            if (playerType === "single" && currentPlayer === "blue") {
+                setTimeout(() => {
+                    makeAIMove(); 
+                }, 1000);
+            }
         }
 
-
-        // Update Nama Pemain berdasarkan mode saat inisialisasi
         function updatePlayerNames() {
             const t = translations[currentLang];
             const redName = t.redPlayer;
             let blueName = t.bluePlayer;
 
-            // PERBAIKAN: Cek playerType, bukan gameMode
             if (playerType === 'single') {
                 blueName = t.aiPlayer; 
             }
 
-            document.querySelector('#red-avatar-box .player-name').textContent = redName;
-            document.querySelector('#blue-avatar-box .player-name').textContent = blueName;
+            const rDisplay = document.getElementById('redPlayerNameDisplay');
+            const bDisplay = document.getElementById('bluePlayerNameDisplay');
+            if(rDisplay) rDisplay.textContent = redName;
+            if(bDisplay) bDisplay.textContent = blueName;
         }
         
         function showWinner(winner) {
@@ -1707,59 +1282,42 @@
             const winnerAvatar = document.getElementById("winnerAvatar");
             const winnerText = document.getElementById("winnerText");
 
-            // Tentukan avatar & teks berdasarkan pemenang
             if (winner === translations[currentLang].redPlayer) {
-                // GUNAKAN VARIABEL GLOBAL
                 winnerAvatar.src = redAvatarUrl; 
             } else {
-                // GUNAKAN VARIABEL GLOBAL
                 winnerAvatar.src = blueAvatarUrl;
             }
 
             winnerText.textContent = `${winner} Menang`;
 
-            // FIX: Jeda musik latar
-            if (bgMusic) {
-                bgMusic.pause();
-            }
-          
+            if (bgMusic) bgMusic.pause();
             if (winSound) {
-            winSound.currentTime = 0;
-            winSound.play(); // Mainkan suara menang
-        }
-        const winnerCloseBtn = document.getElementById("winnerCloseBtn");
+                winSound.currentTime = 0;
+                winSound.play();
+            }
 
-                 
-            // Tampilkan popup
             winnerPopup.style.display = "flex";
         }
+
         document.getElementById("winnerCloseBtn").addEventListener("click", () => {
-            // 1. Putar Sound Effect Klik
             if (menuClickSound) {
                 menuClickSound.currentTime = 0;
                 menuClickSound.play();
             }
             
-            // FIX: Hentikan suara pemenang
             if (winSound) {
                 winSound.pause();
                 winSound.currentTime = 0; 
             }
 
-            // Tutup popup
             document.getElementById("winnerPopup").style.display = "none";
-            
-            // Reset Game
             resetGame();
             
-            // 2. Putar Kembali Backsound
             if (bgMusic) {
                 bgMusic.play().catch(e => console.error("Gagal memutar BGM:", e));
             }
         });
 
-       
-        // Update skor
         function updateScore() {
             let redCount = 0;
             let blueCount = 0;
@@ -1774,7 +1332,6 @@
             document.getElementById('redScore').textContent = redCount;
             document.getElementById('blueScore').textContent = blueCount;
 
-            // Cek kondisi menang
             if (redCount === 0) {
                 setTimeout(() => {
                     showWinner(translations[currentLang].bluePlayer);
@@ -1784,131 +1341,73 @@
                     showWinner(translations[currentLang].redPlayer);
                 }, 500);
             }
-            
         }
 
-        
-        // Reset game
         function resetGame() {
-        currentPlayer = 'red';
-        clearSelection();
-        initBoard();
-        renderBoard();
-        updateScore();
-        updateAvatarTurn(); // tambahkan ini
-
-        const playerDisplay = document.getElementById('currentPlayer');
-        const playerName = translations[currentLang].redPlayer;
-        
-        // FIX: Pastikan elemen currentPlayer ada sebelum diakses
-        if (playerDisplay) {
-            playerDisplay.innerHTML = `${translations[currentLang].turnLabel}: <span class="player-red" id="current-player-name">${playerName}</span>`;
-        }
-    }
-
-        // Inisialisasi game saat halaman dimuat
-        document.addEventListener('DOMContentLoaded', function() {
+            currentPlayer = 'red';
+            clearSelection();
             initBoard();
             renderBoard();
-            updateLanguage('id'); // Set bahasa awal ke Indonesia
-            updatePlayerNames(); // Panggil untuk set nama sesuai mode
             updateScore();
-            updateAvatarTurn(); // Panggil pertama kali untuk set glow di Pemain Merah
-        });
+            updateAvatarTurn();
+        }
 
-
-        // ======================================
-        // FUNGSI BARU: UPDATE PLAYER INFO DARI URL
-        // ======================================
         function updatePlayerInfo() {
-    const urlParams = new URLSearchParams(window.location.search);
-    
-    // MODIFIKASI 1: Ambil mode permainan baru ('challenge' atau 'classic'). Default ke 'classic'.
-    gameMode = urlParams.get('mode') || 'classic'; 
-    
-    const rName = urlParams.get('rName');
-    const bName = urlParams.get('bName');
-    const rAvatar = urlParams.get('rAvatar');
-    const bAvatar = urlParams.get('bAvatar');
-    
-    // 1. Penyimpanan Global (Fix 1: Avatar)
-    if (rAvatar) redAvatarUrl = decodeURIComponent(rAvatar);
-    if (bAvatar) blueAvatarUrl = decodeURIComponent(bAvatar);
-    
-    // 2. Terapkan Nama & Update Translations
-    const redNameDisplay = document.getElementById('redPlayerNameDisplay');
-    const blueNameDisplay = document.getElementById('bluePlayerNameDisplay');
-    
-    if (redNameDisplay && rName) {
-        const decodedRName = decodeURIComponent(rName);
-        redNameDisplay.textContent = decodedRName;
-        translations[currentLang].redPlayer = decodedRName;
-    }
-    
-    if (blueNameDisplay && bName) {
-        const decodedBName = decodeURIComponent(bName);
-        blueNameDisplay.textContent = decodedBName;
-        translations[currentLang].bluePlayer = decodedBName;
-    }
+            const urlParams = new URLSearchParams(window.location.search);
+            gameMode = urlParams.get('mode') || 'classic'; 
+            
+            const rName = urlParams.get('rName');
+            const bName = urlParams.get('bName');
+            const rAvatar = urlParams.get('rAvatar');
+            const bAvatar = urlParams.get('bAvatar');
+            
+            if (rAvatar) redAvatarUrl = decodeURIComponent(rAvatar);
+            if (bAvatar) blueAvatarUrl = decodeURIComponent(bAvatar);
+            
+            const redNameDisplay = document.getElementById('redPlayerNameDisplay');
+            const blueNameDisplay = document.getElementById('bluePlayerNameDisplay');
+            
+            if (redNameDisplay && rName) {
+                const decodedRName = decodeURIComponent(rName);
+                redNameDisplay.textContent = decodedRName;
+                translations[currentLang].redPlayer = decodedRName;
+            }
+            
+            if (blueNameDisplay && bName) {
+                const decodedBName = decodeURIComponent(bName);
+                blueNameDisplay.textContent = decodedBName;
+                translations[currentLang].bluePlayer = decodedBName;
+            }
 
-    // 3. Terapkan Avatar di Tampilan Utama (ID: avatar-red / avatar-blue)
-    const redAvatarImg = document.getElementById('avatar-red'); 
-    const blueAvatarImg = document.getElementById('avatar-blue'); 
-    
-    if (redAvatarImg) {
-        redAvatarImg.src = redAvatarUrl; 
-    }
-    
-    if (blueAvatarImg) {
-        blueAvatarImg.src = blueAvatarUrl; 
-    }
+            const redAvatarImg = document.getElementById('avatar-red'); 
+            const blueAvatarImg = document.getElementById('avatar-blue'); 
+            
+            if (redAvatarImg) redAvatarImg.src = redAvatarUrl; 
+            if (blueAvatarImg) blueAvatarImg.src = blueAvatarUrl; 
 
-    // 4. Terapkan Avatar di Pop-up Awal VS Screen (ID: vs-avatar-red / vs-avatar-blue)
-    const vsRedAvatar = document.getElementById('vs-avatar-red');
-    const vsBlueAvatar = document.getElementById('vs-avatar-blue');
-    
-    if (vsRedAvatar) {
-        vsRedAvatar.src = redAvatarUrl;
-    }
-    
-    if (vsBlueAvatar) {
-        vsBlueAvatar.src = blueAvatarUrl;
-    }
-    
-    // 5. Update tampilan giliran awal (Logika sama)
-    const playerDisplay = document.getElementById('currentPlayer');
-    if (playerDisplay) {
-        const playerName = translations[currentLang].redPlayer; 
-        playerDisplay.innerHTML = `${translations[currentLang].turnLabel}: <span class="player-red" id="current-player-name">${playerName}</span>`;
-    }
+            const vsRedAvatar = document.getElementById('vs-avatar-red');
+            const vsBlueAvatar = document.getElementById('vs-avatar-blue');
+            
+            if (vsRedAvatar) vsRedAvatar.src = redAvatarUrl;
+            if (vsBlueAvatar) vsBlueAvatar.src = blueAvatarUrl;
+        }
 
-    // 6. Update mode hint di pop-up (Opsional)
-    const modeDisplay = document.getElementById('mode-display');
-    if (modeDisplay) {
-        modeDisplay.textContent = gameMode === 'challenge' 
-            ? 'Mode: Dengan Soal Matematika' 
-            : 'Mode: Klasik (Tanpa Soal)';
-    }
-}
+        document.addEventListener('DOMContentLoaded', function() {
+            updatePlayerInfo(); 
+            initBoard();
+            renderBoard();
+            updateLanguage('id');
+            updatePlayerNames();
+            updateScore();
+            updateAvatarTurn(); 
 
-
-
-document.addEventListener('DOMContentLoaded', function() {
-    // Panggil fungsi baru ini SEBELUM inisialisasi papan
-    updatePlayerInfo(); 
-    initBoard();
-    renderBoard();
-    updateLanguage('id');
-    updateScore();
-    updateAvatarTurn(); 
-    // BARU: Event Listeners untuk tombol jawaban
-    document.querySelectorAll('.answer-btn').forEach(btn => {
-            btn.addEventListener('click', function() {
-                const answer = this.getAttribute('data-answer');
-                checkAnswer(answer);
+            document.querySelectorAll('.answer-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const answer = this.getAttribute('data-answer');
+                    checkAnswer(answer);
+                });
             });
         });
-});
     </script>
  </body>
 </html>
